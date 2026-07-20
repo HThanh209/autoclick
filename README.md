@@ -33,7 +33,8 @@ Không cần cài Python.
 |---|---|
 | Windows | `AutoClicker-Windows.zip` |
 | Mac chip M1/M2/M3/M4 | `AutoClicker-macOS-AppleSilicon.zip` |
-| Mac chip Intel | `AutoClicker-macOS-Intel.zip` |
+
+Mac chip Intel chưa có bản dựng sẵn — xem phần build tay bên dưới.
 
 ## Tự build
 

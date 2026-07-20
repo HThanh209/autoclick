@@ -121,20 +121,19 @@
     <span class="arrow">↓</span>
   </a>
 
-  <a class="dl" id="dl-mac-intel" href="https://github.com/HThanh209/autoclick/releases/latest/download/AutoClicker-macOS-Intel.zip">
-    <span class="icon">🍎</span>
-    <span class="text">
-      <span class="name">macOS — chip Intel<span class="badge">Máy của bạn</span></span>
-      <span class="note">Mac đời trước 2020</span>
-    </span>
-    <span class="arrow">↓</span>
-  </a>
 </div>
 
 <p style="color:var(--fg-muted);font-size:14px">
   Không chắc máy Mac của bạn chip gì? Bấm menu  ở góc trên bên trái →
-  <em>About This Mac</em>. Thấy chữ <em>Apple M…</em> thì chọn bản Apple Silicon.
+  <em>About This Mac</em>. Thấy chữ <em>Apple M…</em> là Apple Silicon.
 </p>
+
+<div class="note-box" id="intel-note" style="display:none">
+  <p><strong>Máy bạn là Mac chip Intel.</strong> Hiện chưa có bản dựng sẵn cho
+  Intel. Bạn tải mã nguồn từ
+  <a href="https://github.com/HThanh209/autoclick">GitHub</a> rồi chạy
+  <code>bash build_mac.sh</code> để tự tạo file, hoặc nhắn để mình dựng giúp.</p>
+</div>
 
 <h2>Dùng thế nào</h2>
 <ol>
@@ -182,7 +181,11 @@ Không. Trình duyệt không cho phép trang web điều khiển con chuột th
     } else if (/Mac OS X|Macintosh/i.test(ua)) {
       // Safari/Chrome trên Apple Silicon vẫn báo "Intel Mac OS X", nên UA
       // không đủ tin. Dùng WebGL renderer để phân biệt.
-      id = isAppleSilicon() ? "dl-mac-arm" : "dl-mac-intel";
+      if (isAppleSilicon()) {
+        id = "dl-mac-arm";
+      } else {
+        document.getElementById("intel-note").style.display = "block";
+      }
     }
     if (id) {
       var el = document.getElementById(id);

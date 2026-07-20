@@ -17,12 +17,13 @@ jobs:
           - os: windows-latest
             label: Windows
             asset: AutoClicker-Windows.zip
+          # Chỉ build Apple Silicon. Runner Intel (macos-13) là loại cuối cùng
+          # GitHub còn cung cấp và đang bị thu hẹp — job từng xếp hàng 38 phút
+          # không chạy, chặn luôn việc tạo Release. Cần bản Intel thì build tay
+          # trên máy Intel bằng build_mac.sh.
           - os: macos-latest
             label: macOS (Apple Silicon)
             asset: AutoClicker-macOS-AppleSilicon.zip
-          - os: macos-13
-            label: macOS (Intel)
-            asset: AutoClicker-macOS-Intel.zip
 
     steps:
       - uses: actions/checkout@v4
@@ -78,7 +79,8 @@ jobs:
             |---|---|
             | Windows | `AutoClicker-Windows.zip` |
             | Mac chip M1/M2/M3/M4 | `AutoClicker-macOS-AppleSilicon.zip` |
-            | Mac chip Intel | `AutoClicker-macOS-Intel.zip` |
+
+            Mac chip Intel chưa có bản dựng sẵn — build tay bằng `build_mac.sh`.
 
             Giải nén rồi mở lên chạy, không cần cài Python.
 

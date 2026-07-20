@@ -1,0 +1,4 @@
+# Ép LF cho mọi file text. Nếu build_mac.sh bị lưu CRLF thì trên macOS sẽ
+# lỗi "bash: \r: command not found".
+* text=auto eol=lf
+*.png binary

@@ -93,13 +93,29 @@ mềm kế toán) thì phải chạy AutoClicker bằng *Run as administrator*, 
 click sẽ không ăn. Windows Defender đôi khi cảnh báo file `.exe` chưa ký số —
 chọn *More info* → *Run anyway*.
 
-**macOS** — bắt buộc cấp quyền trong **System Settings → Privacy & Security**:
+**macOS** — không cần cài thêm phần mềm nào, Python và thư viện đã nằm trong
+`.app`. Nhưng có 3 bẫy:
 
-- **Accessibility** — để tool điều khiển được chuột.
-- **Input Monitoring** — để bắt phím tắt F8 / ESC toàn cục. Không cấp thì tool
-  vẫn chạy, chỉ mất hotkey, phải bấm nút trên cửa sổ.
+1. **Gatekeeper chặn app chưa ký số.** Trên Sequoia (15) trở lên, cách chuột phải
+   → Open đã bị Apple bỏ — phải mở app một lần cho nó bị chặn, rồi vào
+   **System Settings → Privacy & Security → Open Anyway**. Sonoma (14) trở về
+   trước thì chuột phải → Open → Open vẫn dùng được.
 
-Đây là cơ chế bảo mật của Apple, không có cách nào bỏ qua.
+2. **Báo "app is damaged"** — không phải file hỏng, là cờ kiểm dịch gắn lên file
+   tải từ mạng. Gỡ bằng:
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/AutoClicker.app
+   ```
+
+3. **Quyền bắt buộc** trong **System Settings → Privacy & Security**:
+   - **Accessibility** — không có thì tool mở được nhưng không click được gì.
+   - **Input Monitoring** — để bắt hotkey F8/ESC. Không cấp thì chỉ mất hotkey.
+
+   Cập nhật lên bản mới mà tool ngừng click: macOS giữ quyền gắn với file cũ →
+   vào Accessibility xóa entry cũ (dấu `−`) rồi thêm lại app mới (dấu `+`).
+
+Đây là cơ chế bảo mật của Apple, không có cách nào bỏ qua. Muốn hết hẳn cảnh báo
+thì phải mua Apple Developer Program (99 USD/năm) để ký số và notarize.
 
 ## Vì sao không làm bản web?
 

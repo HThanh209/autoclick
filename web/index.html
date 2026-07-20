@@ -146,15 +146,45 @@
 <p><kbd>F8</kbd> bật/tắt từ bất kỳ đâu &nbsp;·&nbsp; <kbd>ESC</kbd> dừng khẩn cấp</p>
 
 <h2>Lần đầu chạy trên macOS</h2>
-<div class="note-box">
-  <p><strong>App chưa ký số nên macOS sẽ chặn.</strong> Chuột phải vào AutoClicker → <em>Open</em> → <em>Open</em>. Chỉ cần làm một lần.</p>
-</div>
-<p>Sau đó vào <strong>System Settings → Privacy &amp; Security</strong> và cấp 2 quyền:</p>
+<p>Không cần cài thêm phần mềm nào — Python và mọi thư viện đã nằm sẵn trong app.
+Nhưng phải qua 2 bước sau, thứ tự quan trọng.</p>
+
+<h3 style="font-size:17px;margin:28px 0 10px">Bước 1 — Cho phép mở app</h3>
+<p>App chưa mua chứng chỉ ký số của Apple nên macOS chặn lần đầu. Kéo
+<strong>AutoClicker.app</strong> vào thư mục <strong>Applications</strong>, rồi:</p>
 <ul>
-  <li><strong>Accessibility</strong> — để tool điều khiển được chuột. Không có quyền này thì tool không click được.</li>
-  <li><strong>Input Monitoring</strong> — để bắt phím tắt <kbd>F8</kbd>/<kbd>ESC</kbd>. Bỏ qua cũng được, chỉ là mất phím tắt, phải bấm nút trên cửa sổ.</li>
+  <li><strong>macOS Sequoia (15) trở lên:</strong> mở app một lần (sẽ bị chặn) → vào
+  <strong>System Settings → Privacy &amp; Security</strong> → kéo xuống gần cuối, thấy
+  dòng báo AutoClicker bị chặn → bấm <strong>Open Anyway</strong>.</li>
+  <li><strong>macOS Sonoma (14) trở về trước:</strong> chuột phải vào app →
+  <em>Open</em> → <em>Open</em>.</li>
 </ul>
-<p style="color:var(--fg-muted);font-size:14px">Đây là cơ chế bảo mật của Apple, mọi tool điều khiển chuột trên Mac đều phải xin 2 quyền này.</p>
+
+<div class="note-box">
+  <p><strong>Nếu báo "AutoClicker is damaged and can't be opened"</strong> — đây không
+  phải file hỏng, mà là cờ kiểm dịch macOS gắn lên file tải từ mạng. Mở
+  <strong>Terminal</strong> dán lệnh sau rồi Enter:</p>
+  <p><code>xattr -dr com.apple.quarantine /Applications/AutoClicker.app</code></p>
+  <p>Sau đó mở lại app bình thường.</p>
+</div>
+
+<h3 style="font-size:17px;margin:28px 0 10px">Bước 2 — Cấp quyền điều khiển chuột</h3>
+<p>Vào <strong>System Settings → Privacy &amp; Security</strong> và bật AutoClicker ở 2 mục:</p>
+<ul>
+  <li><strong>Accessibility</strong> — bắt buộc. Không có quyền này thì tool mở lên
+  được nhưng bấm BẮT ĐẦU sẽ không click gì cả.</li>
+  <li><strong>Input Monitoring</strong> — để bắt phím tắt <kbd>F8</kbd>/<kbd>ESC</kbd>.
+  Bỏ qua cũng được, chỉ là mất phím tắt, phải bấm nút trên cửa sổ.</li>
+</ul>
+
+<div class="note-box">
+  <p><strong>Cập nhật lên bản mới mà tool ngừng click?</strong> macOS giữ lại quyền
+  cũ gắn với file cũ. Vào <strong>Accessibility</strong>, chọn AutoClicker, bấm dấu
+  <strong>−</strong> để xóa, rồi bấm <strong>+</strong> thêm lại app mới.</p>
+</div>
+
+<p style="color:var(--fg-muted);font-size:14px">Đây là cơ chế bảo mật của Apple,
+mọi tool điều khiển chuột trên Mac đều phải xin 2 quyền này.</p>
 
 <h2>Lần đầu chạy trên Windows</h2>
 <p>Windows Defender có thể cảnh báo vì file chưa mua chứng chỉ ký số → bấm <em>More info</em> → <em>Run anyway</em>.</p>

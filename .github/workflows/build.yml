@@ -44,7 +44,16 @@ jobs:
         if: runner.os == 'Windows'
         run: Compress-Archive -Path dist/AutoClicker.exe -DestinationPath ${{ matrix.asset }}
 
-      # ditto giữ nguyên quyền thực thi và symlink bên trong .app,
+      # Trên Apple Silicon mọi file thực thi BẮT BUỘC có chữ ký, dù chỉ là
+      # ad-hoc (--sign -). Thiếu thì macOS báo "app is damaged" và không cho
+      # mở, kể cả khi đã bỏ quarantine.
+      - name: Ký ad-hoc
+        if: runner.os == 'macOS'
+        run: |
+          codesign --force --deep --sign - dist/AutoClicker.app
+          codesign --verify --verbose dist/AutoClicker.app
+
+      # ditto giữ nguyên quyền thực thi, symlink và chữ ký bên trong .app,
       # zip thường sẽ làm hỏng bundle.
       - name: Nén bản macOS
         if: runner.os == 'macOS'

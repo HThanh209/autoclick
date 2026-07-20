@@ -67,6 +67,24 @@ bash build_mac.sh
 > trên máy Mac. Đó là lý do dùng GitHub Actions — runner `macos-latest` và
 > `macos-13` là máy Mac thật, miễn phí cho repo public.
 
+## Trang tải về
+
+`web/index.html` là trang giới thiệu + link tải, `app.py` là web server tĩnh
+phục vụ nó. Deploy lên host bất kỳ (vibehost, Render, Fly...):
+
+```bash
+python app.py          # mặc định cổng 8080, đọc biến môi trường PORT
+```
+
+Có sẵn `Dockerfile` nếu host dùng Docker. Không cần cài thư viện ngoài nào —
+`app.py` dùng thuần stdlib. Health check: `GET /health` trả `{"status":"ok"}`.
+
+> **Đừng deploy `autoclicker.py` lên server.** Nó là app desktop, cần màn hình
+> và chuột thật. Container không có `libtk8.6.so`, và kể cả cài `tk-dev` + Xvfb
+> thì nó vẫn không mở cổng HTTP nào nên health check luôn trượt — mà nếu có
+> click thì cũng click lên màn hình ảo của server chứ không phải máy người
+> dùng. Thứ đem deploy là `app.py`, không phải `autoclicker.py`.
+
 ## Lưu ý từng hệ điều hành
 
 **Windows** — chạy được ngay. Nếu app đích chạy quyền Admin (một số game, phần

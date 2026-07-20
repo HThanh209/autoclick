@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auto Clicker — Tải về cho Windows và macOS</title>
+<meta name="description" content="Tool click chuột tự động theo danh sách vị trí. Chạy trên Windows và macOS, không cần cài Python.">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: #f6f7f9;
+    --fg: #16181d;
+    --fg-muted: #5b6270;
+    --border: #e2e5ea;
+    --accent: #2563eb;
+    --accent-fg: #ffffff;
+    --warn-bg: #fff8e6;
+    --warn-border: #f0d38a;
+    --warn-fg: #6b4e00;
+    --radius: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1115;
+      --bg-soft: #171a21;
+      --fg: #e8eaed;
+      --fg-muted: #9aa2b1;
+      --border: #272c36;
+      --accent: #4f86f7;
+      --accent-fg: #0f1115;
+      --warn-bg: #2a2413;
+      --warn-border: #5c4c1c;
+      --warn-fg: #e8d199;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 20px 80px; }
+  header { text-align: center; margin-bottom: 44px; }
+  h1 { font-size: clamp(28px, 6vw, 40px); margin: 0 0 12px; letter-spacing: -0.02em; }
+  .tagline { color: var(--fg-muted); font-size: 18px; margin: 0; }
+  h2 { font-size: 20px; margin: 44px 0 16px; letter-spacing: -0.01em; }
+
+  .downloads { display: grid; gap: 12px; }
+  .dl {
+    display: flex; align-items: center; gap: 16px;
+    padding: 18px 20px;
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--bg-soft);
+    text-decoration: none; color: inherit;
+    transition: border-color .15s, transform .15s;
+  }
+  .dl:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .dl .icon { font-size: 26px; line-height: 1; flex-shrink: 0; }
+  .dl .text { flex: 1; min-width: 0; }
+  .dl .name { font-weight: 600; }
+  .dl .note { color: var(--fg-muted); font-size: 14px; }
+  .dl .arrow { color: var(--fg-muted); flex-shrink: 0; }
+  .dl.recommended { border-color: var(--accent); border-width: 2px; }
+  .badge {
+    display: none;
+    background: var(--accent); color: var(--accent-fg);
+    font-size: 12px; font-weight: 600;
+    padding: 2px 9px; border-radius: 99px; margin-left: 8px;
+    vertical-align: middle;
+  }
+  .dl.recommended .badge { display: inline-block; }
+
+  ol, ul { padding-left: 22px; }
+  li { margin: 8px 0; }
+  kbd {
+    font: inherit; font-size: 13px; font-weight: 600;
+    border: 1px solid var(--border); border-bottom-width: 2px;
+    border-radius: 6px; padding: 1px 7px; background: var(--bg-soft);
+  }
+  .note-box {
+    background: var(--warn-bg); border: 1px solid var(--warn-border);
+    color: var(--warn-fg); border-radius: var(--radius);
+    padding: 16px 20px; margin: 16px 0;
+  }
+  .note-box p:first-child { margin-top: 0; }
+  .note-box p:last-child { margin-bottom: 0; }
+  footer {
+    margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border);
+    color: var(--fg-muted); font-size: 14px; text-align: center;
+  }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Auto Clicker</h1>
+  <p class="tagline">Click chuột tự động theo danh sách vị trí bạn chọn.<br>Chạy trên Windows và macOS, không cần cài Python.</p>
+</header>
+
+<h2>Tải về</h2>
+<div class="downloads">
+  <a class="dl" id="dl-win" href="https://github.com/HThanh209/autoclick/releases/latest/download/AutoClicker-Windows.zip">
+    <span class="icon">🪟</span>
+    <span class="text">
+      <span class="name">Windows<span class="badge">Máy của bạn</span></span>
+      <span class="note">Windows 10 trở lên, 64-bit</span>
+    </span>
+    <span class="arrow">↓</span>
+  </a>
+
+  <a class="dl" id="dl-mac-arm" href="https://github.com/HThanh209/autoclick/releases/latest/download/AutoClicker-macOS-AppleSilicon.zip">
+    <span class="icon">🍎</span>
+    <span class="text">
+      <span class="name">macOS — chip M1/M2/M3/M4<span class="badge">Máy của bạn</span></span>
+      <span class="note">Apple Silicon</span>
+    </span>
+    <span class="arrow">↓</span>
+  </a>
+
+  <a class="dl" id="dl-mac-intel" href="https://github.com/HThanh209/autoclick/releases/latest/download/AutoClicker-macOS-Intel.zip">
+    <span class="icon">🍎</span>
+    <span class="text">
+      <span class="name">macOS — chip Intel<span class="badge">Máy của bạn</span></span>
+      <span class="note">Mac đời trước 2020</span>
+    </span>
+    <span class="arrow">↓</span>
+  </a>
+</div>
+
+<p style="color:var(--fg-muted);font-size:14px">
+  Không chắc máy Mac của bạn chip gì? Bấm menu  ở góc trên bên trái →
+  <em>About This Mac</em>. Thấy chữ <em>Apple M…</em> thì chọn bản Apple Silicon.
+</p>
+
+<h2>Dùng thế nào</h2>
+<ol>
+  <li>Giải nén rồi mở <strong>AutoClicker</strong> lên.</li>
+  <li>Bấm <strong>+ Chọn vị trí</strong> — cửa sổ tool thu nhỏ xuống, bạn click chuột trái vào chỗ cần click. Tọa độ được lưu lại.</li>
+  <li>Lặp lại để thêm nhiều điểm. Tool click lần lượt điểm 1 → 2 → 3 rồi quay lại điểm 1.</li>
+  <li>Đặt <strong>giãn cách mỗi click</strong> (1000 ms = 1 giây).</li>
+  <li>Bấm <strong>BẮT ĐẦU</strong>, hoặc phím <kbd>F8</kbd>.</li>
+</ol>
+<p><kbd>F8</kbd> bật/tắt từ bất kỳ đâu &nbsp;·&nbsp; <kbd>ESC</kbd> dừng khẩn cấp</p>
+
+<h2>Lần đầu chạy trên macOS</h2>
+<div class="note-box">
+  <p><strong>App chưa ký số nên macOS sẽ chặn.</strong> Chuột phải vào AutoClicker → <em>Open</em> → <em>Open</em>. Chỉ cần làm một lần.</p>
+</div>
+<p>Sau đó vào <strong>System Settings → Privacy &amp; Security</strong> và cấp 2 quyền:</p>
+<ul>
+  <li><strong>Accessibility</strong> — để tool điều khiển được chuột. Không có quyền này thì tool không click được.</li>
+  <li><strong>Input Monitoring</strong> — để bắt phím tắt <kbd>F8</kbd>/<kbd>ESC</kbd>. Bỏ qua cũng được, chỉ là mất phím tắt, phải bấm nút trên cửa sổ.</li>
+</ul>
+<p style="color:var(--fg-muted);font-size:14px">Đây là cơ chế bảo mật của Apple, mọi tool điều khiển chuột trên Mac đều phải xin 2 quyền này.</p>
+
+<h2>Lần đầu chạy trên Windows</h2>
+<p>Windows Defender có thể cảnh báo vì file chưa mua chứng chỉ ký số → bấm <em>More info</em> → <em>Run anyway</em>.</p>
+<p>Nếu tool click mà phần mềm đích không phản hồi, thử chạy AutoClicker bằng <em>Run as administrator</em> — một số game và phần mềm chạy quyền Admin chỉ nhận click từ tiến trình cùng quyền.</p>
+
+<h2>Câu hỏi hay gặp</h2>
+<p><strong>Dùng trực tiếp trên web được không?</strong><br>
+Không. Trình duyệt không cho phép trang web điều khiển con chuột thật của hệ điều hành — nếu làm được thì mọi website đều chiếm được máy bạn. Vì vậy tool bắt buộc phải tải về máy.</p>
+
+<footer>
+  Mã nguồn mở tại <a href="https://github.com/HThanh209/autoclick">github.com/HThanh209/autoclick</a>
+</footer>
+
+</div>
+
+<script>
+  // Đoán hệ điều hành để làm nổi bật bản phù hợp. Đoán sai cũng không sao,
+  // cả 3 nút vẫn bấm được bình thường.
+  (function () {
+    var ua = navigator.userAgent;
+    var id = null;
+    if (/Windows/i.test(ua)) {
+      id = "dl-win";
+    } else if (/Mac OS X|Macintosh/i.test(ua)) {
+      // Safari/Chrome trên Apple Silicon vẫn báo "Intel Mac OS X", nên UA
+      // không đủ tin. Dùng WebGL renderer để phân biệt.
+      id = isAppleSilicon() ? "dl-mac-arm" : "dl-mac-intel";
+    }
+    if (id) {
+      var el = document.getElementById(id);
+      if (el) {
+        el.classList.add("recommended");
+        el.parentNode.insertBefore(el, el.parentNode.firstChild);
+      }
+    }
+  })();
+
+  function isAppleSilicon() {
+    try {
+      var c = document.createElement("canvas");
+      var gl = c.getContext("webgl") || c.getContext("experimental-webgl");
+      if (!gl) return false;
+      var ext = gl.getExtension("WEBGL_debug_renderer_info");
+      if (!ext) return false;
+      var r = gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) || "";
+      return /Apple\s+M\d/i.test(r) || /Apple GPU/i.test(r);
+    } catch (e) {
+      return false;
+    }
+  }
+</script>
+</body>
+</html>

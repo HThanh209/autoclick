@@ -88,10 +88,19 @@ Có sẵn `Dockerfile` nếu host dùng Docker. Không cần cài thư viện ng
 
 ## Lưu ý từng hệ điều hành
 
-**Windows** — chạy được ngay. Nếu app đích chạy quyền Admin (một số game, phần
-mềm kế toán) thì phải chạy AutoClicker bằng *Run as administrator*, nếu không
-click sẽ không ăn. Windows Defender đôi khi cảnh báo file `.exe` chưa ký số —
-chọn *More info* → *Run anyway*.
+**Windows** — chạy được ngay, không cần cài gì. Hai lưu ý:
+
+1. **Màn hình xanh "Windows protected your PC"** (Microsoft Defender SmartScreen)
+   — không phải virus, chỉ là file chưa có điểm uy tín vì chưa ký số và còn ít
+   lượt tải. Bấm **More info** → hiện nút **Run anyway** → bấm. Chỉ một lần duy
+   nhất. Nút Run anyway bị giấu cho tới khi bấm More info.
+
+2. **Click không ăn** vào một số game / phần mềm kế toán chạy quyền Admin → chạy
+   AutoClicker bằng *Run as administrator*.
+
+Muốn hết cảnh báo SmartScreen phải mua chứng chỉ ký số: OV ~200–400 USD/năm (uy
+tín tích lũy dần), EV ~300–600 USD/năm (hết ngay). Chỉ đáng nếu phát hành ra
+ngoài.
 
 **macOS** — không cần cài thêm phần mềm nào, Python và thư viện đã nằm trong
 `.app`. Nhưng có 3 bẫy:

@@ -8,31 +8,60 @@
 <style>
   :root {
     --bg: #ffffff;
-    --bg-soft: #f6f7f9;
-    --fg: #16181d;
-    --fg-muted: #5b6270;
-    --border: #e2e5ea;
+    --bg-soft: #f7f8fa;
+    --fg: #14171d;
+    --fg-muted: #5a6272;
+    --border: #e3e6ec;
+
     --accent: #2563eb;
-    --accent-fg: #ffffff;
-    --warn-bg: #fff8e6;
-    --warn-border: #f0d38a;
-    --warn-fg: #6b4e00;
-    --radius: 12px;
+    --accent-soft: #eff4ff;
+    --win: #0f6cbd;
+    --win-soft: #eaf3fb;
+    --mac: #7c4dde;
+    --mac-soft: #f3eefe;
+
+    --warn: #b57500;
+    --warn-bg: #fff8e8;
+    --warn-border: #f3d9a0;
+    --ok: #067647;
+    --ok-bg: #ecfdf3;
+    --ok-border: #a9e0c1;
+    --info: #1c64c4;
+    --info-bg: #eff6ff;
+    --info-border: #b6d4f7;
+
+    --radius: 14px;
+    --shadow: 0 1px 2px rgba(16,24,40,.05), 0 4px 14px rgba(16,24,40,.05);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0f1115;
-      --bg-soft: #171a21;
-      --fg: #e8eaed;
-      --fg-muted: #9aa2b1;
-      --border: #272c36;
-      --accent: #4f86f7;
-      --accent-fg: #0f1115;
-      --warn-bg: #2a2413;
-      --warn-border: #5c4c1c;
-      --warn-fg: #e8d199;
+      --bg: #0e1014;
+      --bg-soft: #161920;
+      --fg: #e9ebef;
+      --fg-muted: #99a1b0;
+      --border: #262b35;
+
+      --accent: #5b8dfc;
+      --accent-soft: #182238;
+      --win: #4aa3e8;
+      --win-soft: #131f2b;
+      --mac: #a586f0;
+      --mac-soft: #1d1830;
+
+      --warn: #e5be74;
+      --warn-bg: #241e11;
+      --warn-border: #4d3f1d;
+      --ok: #6ddba0;
+      --ok-bg: #0f2019;
+      --ok-border: #23503a;
+      --info: #7fb0f5;
+      --info-bg: #121d2e;
+      --info-border: #26405f;
+
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 4px 14px rgba(0,0,0,.3);
     }
   }
+
   * { box-sizing: border-box; }
   body {
     margin: 0;
@@ -41,240 +70,384 @@
     font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 20px 80px; }
-  header { text-align: center; margin-bottom: 44px; }
-  h1 { font-size: clamp(28px, 6vw, 40px); margin: 0 0 12px; letter-spacing: -0.02em; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 56px 20px 80px; }
+  a { color: var(--accent); }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: .9em; background: var(--bg-soft);
+    border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px;
+    word-break: break-all;
+  }
+
+  /* ---------- header ---------- */
+  header { text-align: center; margin-bottom: 48px; }
+  .logo {
+    width: 60px; height: 60px; margin: 0 auto 18px;
+    display: grid; place-items: center; font-size: 30px;
+    background: linear-gradient(135deg, var(--accent), var(--mac));
+    border-radius: 16px; box-shadow: var(--shadow);
+  }
+  h1 { font-size: clamp(30px, 6vw, 42px); margin: 0 0 12px; letter-spacing: -.025em; }
   .tagline { color: var(--fg-muted); font-size: 18px; margin: 0; }
-  h2 { font-size: 20px; margin: 44px 0 16px; letter-spacing: -0.01em; }
 
-  .downloads { display: grid; gap: 12px; }
-  .dl {
-    display: flex; align-items: center; gap: 16px;
-    padding: 18px 20px;
+  /* ---------- section heading ---------- */
+  h2 {
+    font-size: 22px; letter-spacing: -.015em;
+    margin: 52px 0 18px; padding-left: 14px;
+    border-left: 4px solid var(--accent); line-height: 1.3;
+  }
+  h2.win { border-color: var(--win); }
+  h2.mac { border-color: var(--mac); }
+  h3 { font-size: 17px; margin: 26px 0 10px; }
+
+  /* ---------- downloads: 2 cot ---------- */
+  .downloads {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  @media (max-width: 640px) { .downloads { grid-template-columns: 1fr; } }
+
+  .card {
+    position: relative; display: flex; flex-direction: column;
+    padding: 26px 22px 22px; text-align: center;
     border: 1px solid var(--border); border-radius: var(--radius);
-    background: var(--bg-soft);
+    background: var(--bg-soft); box-shadow: var(--shadow);
     text-decoration: none; color: inherit;
-    transition: border-color .15s, transform .15s;
+    transition: transform .15s, border-color .15s, box-shadow .15s;
   }
-  .dl:hover { border-color: var(--accent); transform: translateY(-1px); }
-  .dl .icon { font-size: 26px; line-height: 1; flex-shrink: 0; }
-  .dl .text { flex: 1; min-width: 0; }
-  .dl .name { font-weight: 600; }
-  .dl .note { color: var(--fg-muted); font-size: 14px; }
-  .dl .arrow { color: var(--fg-muted); flex-shrink: 0; }
-  .dl.recommended { border-color: var(--accent); border-width: 2px; }
-  .badge {
-    display: none;
-    background: var(--accent); color: var(--accent-fg);
-    font-size: 12px; font-weight: 600;
-    padding: 2px 9px; border-radius: 99px; margin-left: 8px;
-    vertical-align: middle;
+  .card:hover { transform: translateY(-3px); border-color: var(--os-color); }
+  .card.win { --os-color: var(--win); --os-soft: var(--win-soft); }
+  .card.mac { --os-color: var(--mac); --os-soft: var(--mac-soft); }
+  .card .icon {
+    width: 54px; height: 54px; margin: 0 auto 14px;
+    display: grid; place-items: center; font-size: 27px;
+    background: var(--os-soft); border-radius: 14px;
   }
-  .dl.recommended .badge { display: inline-block; }
+  .card .os { font-size: 19px; font-weight: 650; margin-bottom: 4px; }
+  .card .sub { color: var(--fg-muted); font-size: 14px; margin-bottom: 18px; flex: 1; }
+  .card .btn {
+    display: block; padding: 11px 16px; border-radius: 9px;
+    background: var(--os-color); color: #fff;
+    font-weight: 620; font-size: 15px;
+  }
+  .card .size { color: var(--fg-muted); font-size: 12.5px; margin-top: 10px; }
+  .card.recommended { border-color: var(--os-color); border-width: 2px; }
+  .card .badge {
+    display: none; position: absolute; top: -11px; left: 50%;
+    transform: translateX(-50%); white-space: nowrap;
+    background: var(--os-color); color: #fff;
+    font-size: 12px; font-weight: 640; padding: 3px 12px; border-radius: 99px;
+  }
+  .card.recommended .badge { display: block; }
 
-  ol, ul { padding-left: 22px; }
-  li { margin: 8px 0; }
+  /* ---------- steps ---------- */
+  ol.steps { list-style: none; padding: 0; margin: 0; counter-reset: s; }
+  ol.steps li {
+    counter-increment: s; position: relative;
+    padding: 0 0 18px 46px; margin: 0;
+  }
+  ol.steps li::before {
+    content: counter(s);
+    position: absolute; left: 0; top: -1px;
+    width: 30px; height: 30px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 14px; font-weight: 700;
+  }
+  ol.steps li::after {
+    content: ""; position: absolute; left: 15px; top: 32px; bottom: 4px;
+    width: 2px; background: var(--border);
+  }
+  ol.steps li:last-child { padding-bottom: 0; }
+  ol.steps li:last-child::after { display: none; }
+
+  /* ---------- tabs ---------- */
+  .tabs {
+    display: flex; gap: 8px; padding: 6px;
+    background: var(--bg-soft); border: 1px solid var(--border);
+    border-radius: 12px; margin-bottom: 24px;
+  }
+  .tab {
+    flex: 1; padding: 11px 14px; border: 0; border-radius: 8px;
+    background: transparent; color: var(--fg-muted);
+    font: inherit; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background .15s, color .15s;
+  }
+  .tab:hover { color: var(--fg); }
+  .tab[aria-selected="true"] { background: var(--bg); color: var(--fg); box-shadow: var(--shadow); }
+  .tab[aria-selected="true"][data-os="win"] { color: var(--win); }
+  .tab[aria-selected="true"][data-os="mac"] { color: var(--mac); }
+  .panel[hidden] { display: none; }
+
+  /* ---------- note boxes ---------- */
+  .note {
+    border: 1px solid; border-radius: var(--radius);
+    padding: 16px 20px; margin: 18px 0;
+  }
+  .note p:first-child { margin-top: 0; }
+  .note p:last-child { margin-bottom: 0; }
+  .note .title { font-weight: 660; display: block; margin-bottom: 4px; }
+  .note.warn { background: var(--warn-bg); border-color: var(--warn-border); }
+  .note.warn .title { color: var(--warn); }
+  .note.info { background: var(--info-bg); border-color: var(--info-border); }
+  .note.info .title { color: var(--info); }
+  .note.ok { background: var(--ok-bg); border-color: var(--ok-border); }
+  .note.ok .title { color: var(--ok); }
+
+  .quote {
+    background: var(--bg-soft); border: 1px solid var(--border);
+    border-left: 4px solid var(--info);
+    border-radius: 10px; padding: 14px 18px; margin: 14px 0;
+  }
+  .quote .en { color: var(--fg-muted); font-style: italic; }
+  .quote .vi { margin-top: 10px; }
+
   kbd {
-    font: inherit; font-size: 13px; font-weight: 600;
+    font: inherit; font-size: 13px; font-weight: 640;
     border: 1px solid var(--border); border-bottom-width: 2px;
-    border-radius: 6px; padding: 1px 7px; background: var(--bg-soft);
+    border-radius: 6px; padding: 1px 8px; background: var(--bg-soft);
   }
-  .note-box {
-    background: var(--warn-bg); border: 1px solid var(--warn-border);
-    color: var(--warn-fg); border-radius: var(--radius);
-    padding: 16px 20px; margin: 16px 0;
-  }
-  .note-box p:first-child { margin-top: 0; }
-  .note-box p:last-child { margin-bottom: 0; }
+  .btn-name { font-weight: 660; color: var(--accent); }
+  ul { padding-left: 20px; }
+  li { margin: 7px 0; }
+
   footer {
-    margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border);
+    margin-top: 60px; padding-top: 26px; border-top: 1px solid var(--border);
     color: var(--fg-muted); font-size: 14px; text-align: center;
   }
-  a { color: var(--accent); }
 </style>
 </head>
 <body>
 <div class="wrap">
 
 <header>
+  <div class="logo">🖱️</div>
   <h1>Auto Clicker</h1>
-  <p class="tagline">Click chuột tự động theo danh sách vị trí bạn chọn.<br>Chạy trên Windows và macOS, không cần cài Python.</p>
+  <p class="tagline">Click chuột tự động theo danh sách vị trí bạn chọn.<br>
+  Chạy trên Windows và macOS, không cần cài Python.</p>
 </header>
 
+<!-- ============ TẢI VỀ ============ -->
 <h2>Tải về</h2>
 <div class="downloads">
-  <a class="dl" id="dl-win" href="https://github.com/HThanh209/autoclick/releases/latest/download/AutoClicker-Windows.zip">
+  <a class="card win" id="dl-win"
+     href="https://github.com/HThanh209/autoclick/releases/latest/download/AutoClicker-Windows.zip">
+    <span class="badge">Máy của bạn</span>
     <span class="icon">🪟</span>
-    <span class="text">
-      <span class="name">Windows<span class="badge">Máy của bạn</span></span>
-      <span class="note">Windows 10 trở lên, 64-bit</span>
-    </span>
-    <span class="arrow">↓</span>
+    <span class="os">Windows</span>
+    <span class="sub">Windows 10 trở lên · 64-bit</span>
+    <span class="btn">Tải về</span>
+    <span class="size">≈ 11 MB · .zip</span>
   </a>
 
-  <a class="dl" id="dl-mac-arm" href="https://github.com/HThanh209/autoclick/releases/latest/download/AutoClicker-macOS-AppleSilicon.zip">
+  <a class="card mac" id="dl-mac"
+     href="https://github.com/HThanh209/autoclick/releases/latest/download/AutoClicker-macOS-AppleSilicon.zip">
+    <span class="badge">Máy của bạn</span>
     <span class="icon">🍎</span>
-    <span class="text">
-      <span class="name">macOS — chip M1/M2/M3/M4<span class="badge">Máy của bạn</span></span>
-      <span class="note">Apple Silicon</span>
-    </span>
-    <span class="arrow">↓</span>
+    <span class="os">macOS</span>
+    <span class="sub">Chip Apple M1 / M2 / M3 / M4</span>
+    <span class="btn">Tải về</span>
+    <span class="size">≈ 11 MB · .zip</span>
   </a>
-
 </div>
 
-<p style="color:var(--fg-muted);font-size:14px">
-  Không chắc máy Mac của bạn chip gì? Bấm menu  ở góc trên bên trái →
-  <em>About This Mac</em>. Thấy chữ <em>Apple M…</em> là Apple Silicon.
+<p style="color:var(--fg-muted);font-size:14px;margin-top:16px">
+  Không chắc Mac của bạn chip gì? Bấm menu  góc trên bên trái →
+  <em>About This Mac</em>. Thấy chữ <em>Apple M…</em> là đúng bản này.
 </p>
 
-<div class="note-box" id="intel-note" style="display:none">
-  <p><strong>Máy bạn là Mac chip Intel.</strong> Hiện chưa có bản dựng sẵn cho
-  Intel. Bạn tải mã nguồn từ
-  <a href="https://github.com/HThanh209/autoclick">GitHub</a> rồi chạy
-  <code>bash build_mac.sh</code> để tự tạo file, hoặc nhắn để mình dựng giúp.</p>
+<div class="note warn" id="intel-note" style="display:none">
+  <span class="title">Mac của bạn dùng chip Intel</span>
+  <p>Bản dựng sẵn ở trên chỉ chạy trên chip Apple M, không chạy được trên Intel.
+  Bạn tải mã nguồn từ <a href="https://github.com/HThanh209/autoclick">GitHub</a>
+  rồi chạy <code>bash build_mac.sh</code> để tự tạo file.</p>
 </div>
 
+<!-- ============ DÙNG THẾ NÀO ============ -->
 <h2>Dùng thế nào</h2>
-<ol>
+<ol class="steps">
   <li>Giải nén rồi mở <strong>AutoClicker</strong> lên.</li>
-  <li>Bấm <strong>+ Chọn vị trí</strong> — cửa sổ tool thu nhỏ xuống, bạn click chuột trái vào chỗ cần click. Tọa độ được lưu lại.</li>
-  <li>Lặp lại để thêm nhiều điểm. Tool click lần lượt điểm 1 → 2 → 3 rồi quay lại điểm 1.</li>
-  <li>Đặt <strong>giãn cách mỗi click</strong> (1000 ms = 1 giây).</li>
-  <li>Bấm <strong>BẮT ĐẦU</strong>, hoặc phím <kbd>F8</kbd>.</li>
+  <li>Bấm <span class="btn-name">+ Chọn vị trí</span> — cửa sổ tool thu nhỏ xuống,
+  bạn click chuột trái vào chỗ cần click. Tọa độ được lưu lại.</li>
+  <li>Lặp lại để thêm nhiều điểm. Tool click lần lượt
+  điểm 1 → 2 → 3 rồi quay lại điểm 1.</li>
+  <li>Đặt <strong>giãn cách mỗi click</strong> — 1000 ms = 1 giây.</li>
+  <li>Bấm <span class="btn-name">BẮT ĐẦU</span>, hoặc phím <kbd>F8</kbd>.</li>
 </ol>
-<p><kbd>F8</kbd> bật/tắt từ bất kỳ đâu &nbsp;·&nbsp; <kbd>ESC</kbd> dừng khẩn cấp</p>
 
-<h2>Lần đầu chạy trên macOS</h2>
-<p>Không cần cài thêm phần mềm nào — Python và mọi thư viện đã nằm sẵn trong app.
-Nhưng phải qua 2 bước sau, thứ tự quan trọng.</p>
-
-<h3 style="font-size:17px;margin:28px 0 10px">Bước 1 — Cho phép mở app</h3>
-<p>App chưa mua chứng chỉ ký số của Apple nên macOS chặn lần đầu. Kéo
-<strong>AutoClicker.app</strong> vào thư mục <strong>Applications</strong>, rồi:</p>
-<ul>
-  <li><strong>macOS Sequoia (15) trở lên:</strong> mở app một lần (sẽ bị chặn) → vào
-  <strong>System Settings → Privacy &amp; Security</strong> → kéo xuống gần cuối, thấy
-  dòng báo AutoClicker bị chặn → bấm <strong>Open Anyway</strong>.</li>
-  <li><strong>macOS Sonoma (14) trở về trước:</strong> chuột phải vào app →
-  <em>Open</em> → <em>Open</em>.</li>
-</ul>
-
-<div class="note-box">
-  <p><strong>Nếu báo "AutoClicker is damaged and can't be opened"</strong> — đây không
-  phải file hỏng, mà là cờ kiểm dịch macOS gắn lên file tải từ mạng. Mở
-  <strong>Terminal</strong> dán lệnh sau rồi Enter:</p>
-  <p><code>xattr -dr com.apple.quarantine /Applications/AutoClicker.app</code></p>
-  <p>Sau đó mở lại app bình thường.</p>
+<div class="note ok">
+  <span class="title">Phím tắt</span>
+  <p><kbd>F8</kbd> bật / tắt, bấm được từ bất kỳ đâu &nbsp;·&nbsp;
+  <kbd>ESC</kbd> dừng khẩn cấp</p>
 </div>
 
-<h3 style="font-size:17px;margin:28px 0 10px">Bước 2 — Cấp quyền điều khiển chuột</h3>
-<p>Vào <strong>System Settings → Privacy &amp; Security</strong> và bật AutoClicker ở 2 mục:</p>
-<ul>
-  <li><strong>Accessibility</strong> — bắt buộc. Không có quyền này thì tool mở lên
-  được nhưng bấm BẮT ĐẦU sẽ không click gì cả.</li>
-  <li><strong>Input Monitoring</strong> — để bắt phím tắt <kbd>F8</kbd>/<kbd>ESC</kbd>.
-  Bỏ qua cũng được, chỉ là mất phím tắt, phải bấm nút trên cửa sổ.</li>
-</ul>
+<!-- ============ LẦN ĐẦU CHẠY ============ -->
+<h2>Lần đầu chạy</h2>
+<p style="color:var(--fg-muted);margin-top:-6px">Chọn hệ điều hành của bạn:</p>
 
-<div class="note-box">
-  <p><strong>Cập nhật lên bản mới mà tool ngừng click?</strong> macOS giữ lại quyền
-  cũ gắn với file cũ. Vào <strong>Accessibility</strong>, chọn AutoClicker, bấm dấu
-  <strong>−</strong> để xóa, rồi bấm <strong>+</strong> thêm lại app mới.</p>
+<div class="tabs" role="tablist">
+  <button class="tab" data-os="win" role="tab" aria-selected="true"
+          aria-controls="panel-win" id="tab-win">🪟 Windows</button>
+  <button class="tab" data-os="mac" role="tab" aria-selected="false"
+          aria-controls="panel-mac" id="tab-mac">🍎 macOS</button>
 </div>
 
-<p style="color:var(--fg-muted);font-size:14px">Đây là cơ chế bảo mật của Apple,
-mọi tool điều khiển chuột trên Mac đều phải xin 2 quyền này.</p>
-
-<h2>Lần đầu chạy trên Windows</h2>
-
-<div class="note-box">
+<!-- ---- Windows ---- -->
+<section class="panel" id="panel-win" role="tabpanel" aria-labelledby="tab-win">
+  <h3>Windows chặn lần đầu — đây không phải virus</h3>
   <p>Bạn sẽ gặp một màn hình xanh chữ tiếng Anh:</p>
-  <p style="margin:10px 0"><strong>“Windows protected your PC”</strong><br>
-  <em>Microsoft Defender SmartScreen prevented an unrecognized app from starting.
-  Running this app might put your PC at risk.</em></p>
-  <p>Dịch: <strong>“Windows đã bảo vệ máy của bạn”</strong> — <em>Microsoft Defender
-  SmartScreen đã chặn một ứng dụng lạ khởi động. Chạy ứng dụng này có thể khiến máy
-  bạn gặp rủi ro.</em></p>
-  <p><strong>Đây không phải virus.</strong> Windows không tìm thấy mã độc nào trong
-  file cả. Chữ <em>“ứng dụng lạ”</em> nghĩa đen là “tôi chưa từng thấy file này bao
-  giờ” — chứ không phải “file này nguy hiểm”.</p>
-</div>
 
-<p><strong>Cách chạy:</strong></p>
-<ol>
-  <li>Bấm dòng chữ gạch chân <strong>More info</strong> <em>(Thông tin thêm)</em></li>
-  <li>Hiện thêm nút <strong>Run anyway</strong> <em>(Vẫn chạy)</em> ở góc dưới bên
-  phải → bấm vào</li>
-</ol>
-<p>Chỉ cần làm một lần, lần sau mở không hỏi lại.</p>
+  <div class="quote">
+    <strong>“Windows protected your PC”</strong><br>
+    <span class="en">Microsoft Defender SmartScreen prevented an unrecognized app
+    from starting. Running this app might put your PC at risk.</span>
+    <div class="vi"><strong>“Windows đã bảo vệ máy của bạn”</strong> —
+    Microsoft Defender SmartScreen đã chặn một ứng dụng lạ khởi động. Chạy ứng
+    dụng này có thể khiến máy bạn gặp rủi ro.</div>
+  </div>
 
-<div class="note-box">
-  <p><strong>Không thấy nút Run anyway?</strong> Là do bạn chưa bấm
-  <em>More info</em>. Ở màn hình đầu Windows chỉ cho thấy nút
-  <strong>Don’t run</strong> <em>(Đừng chạy)</em>, nhìn như hết đường — nút chạy bị
-  giấu đi để bạn không bấm vội.</p>
-</div>
+  <div class="note info">
+    <span class="title">Windows không hề tìm thấy mã độc</span>
+    <p>Chữ <em>“ứng dụng lạ”</em> nghĩa là <strong>“tôi chưa từng thấy file này
+    bao giờ”</strong>, chứ không phải “file này nguy hiểm”. Mọi phần mềm nhỏ
+    chưa mua chứng chỉ ký số đều bị chặn y hệt.</p>
+  </div>
 
-<p style="color:var(--fg-muted);font-size:14px">Vì sao bị chặn: Microsoft chấm
-điểm uy tín dựa trên việc file có chứng chỉ ký số không, và đã có bao nhiêu người
-tải chạy. File này mới build, chưa mua chứng chỉ (loại rẻ nhất cũng vài trăm đô
-mỗi năm), lượt tải còn ít → điểm bằng 0 → chặn. Mọi phần mềm nhỏ tự build đều
-gặp y hệt.</p>
+  <h3>Cách chạy</h3>
+  <ol class="steps">
+    <li>Bấm dòng chữ gạch chân <span class="btn-name">More info</span>
+    <em>(Thông tin thêm)</em></li>
+    <li>Hiện thêm nút <span class="btn-name">Run anyway</span> <em>(Vẫn chạy)</em>
+    ở góc dưới bên phải → bấm vào</li>
+  </ol>
+  <p>Chỉ cần làm một lần, lần sau mở không hỏi lại.</p>
 
-<p><strong>Tool click mà phần mềm đích không phản hồi?</strong> Chuột phải vào
-AutoClicker → <em>Run as administrator</em>. Một số game và phần mềm kế toán chạy
-quyền Admin chỉ nhận click từ tiến trình cùng quyền.</p>
+  <div class="note warn">
+    <span class="title">Không thấy nút Run anyway?</span>
+    <p>Là do bạn chưa bấm <strong>More info</strong>. Ở màn hình đầu Windows chỉ
+    cho thấy nút <strong>Don’t run</strong> <em>(Đừng chạy)</em>, nhìn như hết
+    đường — nút chạy bị giấu đi để bạn không bấm vội.</p>
+  </div>
 
+  <h3>Click mà phần mềm đích không phản hồi?</h3>
+  <p>Chuột phải vào AutoClicker → <strong>Run as administrator</strong>. Một số
+  game và phần mềm kế toán chạy quyền Admin chỉ nhận click từ tiến trình cùng
+  quyền.</p>
+</section>
+
+<!-- ---- macOS ---- -->
+<section class="panel" id="panel-mac" role="tabpanel" aria-labelledby="tab-mac" hidden>
+  <div class="note ok">
+    <span class="title">Không cần cài thêm phần mềm nào</span>
+    <p>Python và mọi thư viện đã nằm sẵn bên trong app. Nhưng phải qua 2 bước
+    dưới đây, thứ tự quan trọng.</p>
+  </div>
+
+  <h3>Bước 1 — Cho phép mở app</h3>
+  <p>App chưa mua chứng chỉ ký số của Apple nên macOS chặn lần đầu. Kéo
+  <strong>AutoClicker.app</strong> vào thư mục <strong>Applications</strong>, rồi:</p>
+  <ul>
+    <li><strong>macOS Sequoia (15) trở lên:</strong> mở app một lần cho nó bị chặn →
+    vào <strong>System Settings → Privacy &amp; Security</strong> → kéo xuống gần
+    cuối, thấy dòng báo AutoClicker bị chặn → bấm
+    <span class="btn-name">Open Anyway</span>.</li>
+    <li><strong>macOS Sonoma (14) trở về trước:</strong> chuột phải vào app →
+    <em>Open</em> → <em>Open</em>.</li>
+  </ul>
+
+  <div class="note warn">
+    <span class="title">Báo “AutoClicker is damaged and can’t be opened”?</span>
+    <p>Không phải file hỏng — là cờ kiểm dịch macOS gắn lên mọi file tải từ mạng.
+    Mở <strong>Terminal</strong>, dán lệnh sau rồi Enter:</p>
+    <p><code>xattr -dr com.apple.quarantine /Applications/AutoClicker.app</code></p>
+    <p>Sau đó mở lại app bình thường.</p>
+  </div>
+
+  <h3>Bước 2 — Cấp quyền điều khiển chuột</h3>
+  <p>Vào <strong>System Settings → Privacy &amp; Security</strong>, bật AutoClicker
+  ở 2 mục:</p>
+  <ul>
+    <li><strong>Accessibility</strong> — bắt buộc. Thiếu quyền này thì tool mở lên
+    được nhưng bấm BẮT ĐẦU sẽ không click gì cả.</li>
+    <li><strong>Input Monitoring</strong> — để bắt phím tắt <kbd>F8</kbd>/<kbd>ESC</kbd>.
+    Bỏ qua cũng được, chỉ mất phím tắt, phải bấm nút trên cửa sổ.</li>
+  </ul>
+
+  <div class="note warn">
+    <span class="title">Cập nhật bản mới mà tool ngừng click?</span>
+    <p>macOS gắn quyền vào từng file cụ thể, nên bản mới bị coi là app khác. Vào
+    <strong>Accessibility</strong>, chọn AutoClicker, bấm <strong>−</strong> để
+    xóa, rồi bấm <strong>+</strong> thêm lại app mới.</p>
+  </div>
+
+  <p style="color:var(--fg-muted);font-size:14px">Đây là cơ chế bảo mật của Apple,
+  mọi tool điều khiển chuột trên Mac đều phải xin 2 quyền này.</p>
+</section>
+
+<!-- ============ FAQ ============ -->
 <h2>Câu hỏi hay gặp</h2>
-<p><strong>Dùng trực tiếp trên web được không?</strong><br>
-Không. Trình duyệt không cho phép trang web điều khiển con chuột thật của hệ điều hành — nếu làm được thì mọi website đều chiếm được máy bạn. Vì vậy tool bắt buộc phải tải về máy.</p>
+
+<h3>Dùng trực tiếp trên web được không?</h3>
+<p>Không. Trình duyệt không cho phép trang web điều khiển con chuột thật của hệ
+điều hành — nếu làm được thì mọi website đều chiếm được máy bạn. Vì vậy tool bắt
+buộc phải tải về máy.</p>
+
+<h3>Làm sao hết cảnh báo bảo mật?</h3>
+<p>Phải mua chứng chỉ ký số: Windows khoảng 200–600 USD/năm, Apple Developer
+Program 99 USD/năm. Chỉ đáng nếu phát hành ra ngoài cho người lạ. Dùng nội bộ thì
+cứ bấm qua cảnh báo một lần là xong.</p>
 
 <footer>
-  Mã nguồn mở tại <a href="https://github.com/HThanh209/autoclick">github.com/HThanh209/autoclick</a>
+  Mã nguồn mở tại
+  <a href="https://github.com/HThanh209/autoclick">github.com/HThanh209/autoclick</a>
 </footer>
 
 </div>
 
 <script>
-  // Đoán hệ điều hành để làm nổi bật bản phù hợp. Đoán sai cũng không sao,
-  // cả 3 nút vẫn bấm được bình thường.
-  (function () {
-    var ua = navigator.userAgent;
-    var id = null;
-    if (/Windows/i.test(ua)) {
-      id = "dl-win";
-    } else if (/Mac OS X|Macintosh/i.test(ua)) {
-      // Safari/Chrome trên Apple Silicon vẫn báo "Intel Mac OS X", nên UA
-      // không đủ tin. Dùng WebGL renderer để phân biệt.
-      if (isAppleSilicon()) {
-        id = "dl-mac-arm";
-      } else {
-        document.getElementById("intel-note").style.display = "block";
-      }
-    }
-    if (id) {
-      var el = document.getElementById(id);
-      if (el) {
-        el.classList.add("recommended");
-        el.parentNode.insertBefore(el, el.parentNode.firstChild);
-      }
-    }
-  })();
+(function () {
+  var ua = navigator.userAgent;
+  var isWin = /Windows/i.test(ua);
+  var isMac = /Mac OS X|Macintosh/i.test(ua);
 
+  // Safari/Chrome trên Apple Silicon vẫn khai "Intel Mac OS X" trong user agent,
+  // nên phải hỏi WebGL renderer mới biết chip thật.
   function isAppleSilicon() {
     try {
-      var c = document.createElement("canvas");
-      var gl = c.getContext("webgl") || c.getContext("experimental-webgl");
+      var gl = document.createElement("canvas").getContext("webgl");
       if (!gl) return false;
       var ext = gl.getExtension("WEBGL_debug_renderer_info");
       if (!ext) return false;
       var r = gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) || "";
-      return /Apple\s+M\d/i.test(r) || /Apple GPU/i.test(r);
-    } catch (e) {
-      return false;
+      return /Apple\s*M\d/i.test(r) || /Apple GPU/i.test(r);
+    } catch (e) { return false; }
+  }
+
+  // Làm nổi bật thẻ tải phù hợp. Đoán sai cũng không sao, cả 2 nút vẫn bấm được.
+  if (isWin) {
+    document.getElementById("dl-win").classList.add("recommended");
+  } else if (isMac) {
+    if (isAppleSilicon()) {
+      document.getElementById("dl-mac").classList.add("recommended");
+    } else {
+      document.getElementById("intel-note").style.display = "block";
     }
   }
+
+  // Tab hướng dẫn: mặc định mở đúng hệ điều hành đang dùng.
+  var tabs = [].slice.call(document.querySelectorAll(".tab"));
+  function select(os) {
+    tabs.forEach(function (t) {
+      var on = t.dataset.os === os;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      document.getElementById("panel-" + t.dataset.os).hidden = !on;
+    });
+  }
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function () { select(t.dataset.os); });
+  });
+  select(isMac ? "mac" : "win");
+})();
 </script>
 </body>
 </html>

@@ -583,6 +583,26 @@
 
 <script>
 (function () {
+  // Facebook, Google, Instagram gắn thêm mã theo dõi vào link khi người ta
+  // bấm từ nền tảng của họ. Không chặn được lúc họ gắn, nhưng dọn được ngay
+  // khi trang mở, để ai copy link từ thanh địa chỉ gửi tiếp thì được link sạch.
+  (function cleanTrackingParams() {
+    if (!location.search || !window.history || !history.replaceState) return;
+    var junk = ["fbclid", "gclid", "igshid", "mc_cid", "mc_eid", "msclkid",
+                "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
+    try {
+      var params = new URLSearchParams(location.search);
+      var removed = false;
+      junk.forEach(function (k) {
+        if (params.has(k)) { params.delete(k); removed = true; }
+      });
+      if (!removed) return;
+      var qs = params.toString();
+      // Giữ nguyên phần #... vì nó quyết định đang mở mục nào.
+      history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+    } catch (e) { /* trình duyệt cũ không có URLSearchParams thì thôi */ }
+  })();
+
   var ua = navigator.userAgent;
   var isWin = /Windows/i.test(ua);
   var isMac = /Mac OS X|Macintosh/i.test(ua);

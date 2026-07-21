@@ -70,7 +70,7 @@
     font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 820px; margin: 0 auto; padding: 56px 20px 80px; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 20px 80px; }
   a { color: var(--accent); }
   code {
     font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
@@ -80,30 +80,68 @@
   }
 
   /* ---------- header ---------- */
-  header { text-align: center; margin-bottom: 48px; }
+  header { text-align: center; padding: 44px 0 26px; }
   .logo {
-    width: 60px; height: 60px; margin: 0 auto 18px;
-    display: grid; place-items: center; font-size: 30px;
+    width: 56px; height: 56px; margin: 0 auto 16px;
+    display: grid; place-items: center; font-size: 28px;
     background: linear-gradient(135deg, var(--accent), var(--mac));
     border-radius: 16px; box-shadow: var(--shadow);
   }
-  h1 { font-size: clamp(30px, 6vw, 42px); margin: 0 0 12px; letter-spacing: -.025em; }
-  .tagline { color: var(--fg-muted); font-size: 18px; margin: 0; }
+  h1 { font-size: clamp(27px, 5.5vw, 38px); margin: 0 0 10px; letter-spacing: -.025em; }
+  .tagline { color: var(--fg-muted); font-size: 17px; margin: 0; }
 
-  /* ---------- section heading ---------- */
+  /* ---------- menu chuyển trang ---------- */
+  .nav-bar {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+  .nav {
+    max-width: 820px; margin: 0 auto; padding: 0 20px;
+    display: flex; gap: 4px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav button {
+    flex: 0 0 auto;
+    padding: 15px 16px; border: 0; background: transparent;
+    border-bottom: 3px solid transparent; margin-bottom: -1px;
+    color: var(--fg-muted); font: inherit; font-weight: 600; font-size: 15px;
+    white-space: nowrap; cursor: pointer;
+    transition: color .15s, border-color .15s;
+  }
+  .nav button:hover { color: var(--fg); }
+  .nav button[aria-current="true"] {
+    color: var(--accent); border-bottom-color: var(--accent);
+  }
+
+  /* Chọn bằng ô sổ xuống khi màn hình hẹp */
+  .nav-select { display: none; width: 100%; margin: 12px 0; }
+  .nav-select select {
+    width: 100%; padding: 12px 14px;
+    border: 1px solid var(--border); border-radius: 10px;
+    background: var(--bg-soft); color: var(--fg);
+    font: inherit; font-weight: 600;
+  }
+  @media (max-width: 620px) {
+    .nav { display: none; }
+    .nav-select { display: block; }
+    .nav-bar { position: static; border-bottom: 0; margin-bottom: 20px; }
+  }
+
+  .view[hidden] { display: none; }
+
+  /* ---------- tiêu đề ---------- */
   h2 {
-    font-size: 22px; letter-spacing: -.015em;
-    margin: 52px 0 18px; padding-left: 14px;
+    font-size: 24px; letter-spacing: -.02em;
+    margin: 0 0 20px; padding-left: 14px;
     border-left: 4px solid var(--accent); line-height: 1.3;
   }
-  h2.win { border-color: var(--win); }
-  h2.mac { border-color: var(--mac); }
-  h3 { font-size: 17px; margin: 26px 0 10px; }
+  h3 { font-size: 17px; margin: 28px 0 10px; }
 
-  /* ---------- downloads: 2 cot ---------- */
-  .downloads {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-  }
+  /* ---------- tải về ---------- */
+  .downloads { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media (max-width: 640px) { .downloads { grid-template-columns: 1fr; } }
 
   .card {
@@ -112,7 +150,7 @@
     border: 1px solid var(--border); border-radius: var(--radius);
     background: var(--bg-soft); box-shadow: var(--shadow);
     text-decoration: none; color: inherit;
-    transition: transform .15s, border-color .15s, box-shadow .15s;
+    transition: transform .15s, border-color .15s;
   }
   .card:hover { transform: translateY(-3px); border-color: var(--os-color); }
   .card.win { --os-color: var(--win); --os-soft: var(--win-soft); }
@@ -139,7 +177,7 @@
   }
   .card.recommended .badge { display: block; }
 
-  /* ---------- steps ---------- */
+  /* ---------- các bước ---------- */
   ol.steps { list-style: none; padding: 0; margin: 0; counter-reset: s; }
   ol.steps li {
     counter-increment: s; position: relative;
@@ -160,7 +198,7 @@
   ol.steps li:last-child { padding-bottom: 0; }
   ol.steps li:last-child::after { display: none; }
 
-  /* ---------- tabs ---------- */
+  /* ---------- tab hệ điều hành ---------- */
   .tabs {
     display: flex; gap: 8px; padding: 6px;
     background: var(--bg-soft); border: 1px solid var(--border);
@@ -174,16 +212,13 @@
     transition: background .15s, color .15s;
   }
   .tab:hover { color: var(--fg); }
-  .tab[aria-selected="true"] { background: var(--bg); color: var(--fg); box-shadow: var(--shadow); }
+  .tab[aria-selected="true"] { background: var(--bg); box-shadow: var(--shadow); }
   .tab[aria-selected="true"][data-os="win"] { color: var(--win); }
   .tab[aria-selected="true"][data-os="mac"] { color: var(--mac); }
   .panel[hidden] { display: none; }
 
-  /* ---------- note boxes ---------- */
-  .note {
-    border: 1px solid; border-radius: var(--radius);
-    padding: 16px 20px; margin: 18px 0;
-  }
+  /* ---------- hộp lưu ý ---------- */
+  .note { border: 1px solid; border-radius: var(--radius); padding: 16px 20px; margin: 18px 0; }
   .note p:first-child { margin-top: 0; }
   .note p:last-child { margin-bottom: 0; }
   .note .title { font-weight: 660; display: block; margin-bottom: 4px; }
@@ -211,14 +246,25 @@
   ul { padding-left: 20px; }
   li { margin: 7px 0; }
 
+  /* ---------- điều hướng cuối trang ---------- */
+  .next {
+    display: flex; justify-content: flex-end;
+    margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border);
+  }
+  .next button {
+    padding: 11px 20px; border: 1px solid var(--border); border-radius: 10px;
+    background: var(--bg-soft); color: var(--fg);
+    font: inherit; font-weight: 620; cursor: pointer;
+  }
+  .next button:hover { border-color: var(--accent); color: var(--accent); }
+
   footer {
-    margin-top: 60px; padding-top: 26px; border-top: 1px solid var(--border);
+    margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border);
     color: var(--fg-muted); font-size: 14px; text-align: center;
   }
 </style>
 </head>
 <body>
-<div class="wrap">
 
 <header>
   <div class="logo">🖱️</div>
@@ -227,225 +273,272 @@
   Chạy trên Windows và macOS, không cần cài Python.</p>
 </header>
 
-<!-- ============ TẢI VỀ ============ -->
-<h2>Tải về</h2>
-<div class="downloads">
-  <a class="card win" id="dl-win"
-     href="https://github.com/HThanh209/autoclick/releases/latest/download/AutoClicker-Windows.zip">
-    <span class="badge">Máy của bạn</span>
-    <span class="icon">🪟</span>
-    <span class="os">Windows</span>
-    <span class="sub">Windows 10 trở lên · 64-bit</span>
-    <span class="btn">Tải về</span>
-    <span class="size">≈ 11 MB · .zip</span>
-  </a>
-
-  <a class="card mac" id="dl-mac"
-     href="https://github.com/HThanh209/autoclick/releases/latest/download/AutoClicker-macOS-AppleSilicon.zip">
-    <span class="badge">Máy của bạn</span>
-    <span class="icon">🍎</span>
-    <span class="os">macOS</span>
-    <span class="sub">Chip Apple M1 / M2 / M3 / M4</span>
-    <span class="btn">Tải về</span>
-    <span class="size">≈ 11 MB · .zip</span>
-  </a>
+<div class="nav-bar">
+  <nav class="nav" id="nav">
+    <button data-view="tai-ve" aria-current="true">Tải về</button>
+    <button data-view="dung-the-nao">Dùng thế nào</button>
+    <button data-view="luu-bo">Lưu bộ vị trí</button>
+    <button data-view="lan-dau">Lần đầu chạy</button>
+    <button data-view="hoi-dap">Câu hỏi hay gặp</button>
+  </nav>
+  <div class="wrap nav-select">
+    <select id="nav-select" aria-label="Chọn mục">
+      <option value="tai-ve">Tải về</option>
+      <option value="dung-the-nao">Dùng thế nào</option>
+      <option value="luu-bo">Lưu bộ vị trí</option>
+      <option value="lan-dau">Lần đầu chạy</option>
+      <option value="hoi-dap">Câu hỏi hay gặp</option>
+    </select>
+  </div>
 </div>
 
-<p style="color:var(--fg-muted);font-size:14px;margin-top:16px">
-  Không chắc Mac của bạn chip gì? Bấm menu  góc trên bên trái →
-  <em>About This Mac</em>. Thấy chữ <em>Apple M…</em> là đúng bản này.
-</p>
+<div class="wrap">
 
-<div class="note warn" id="intel-note" style="display:none">
-  <span class="title">Mac của bạn dùng chip Intel</span>
-  <p>Bản dựng sẵn ở trên chỉ chạy trên chip Apple M, không chạy được trên Intel.
-  Bạn tải mã nguồn từ <a href="https://github.com/HThanh209/autoclick">GitHub</a>
-  rồi chạy <code>bash build_mac.sh</code> để tự tạo file.</p>
-</div>
+<!-- ============ 1. TẢI VỀ ============ -->
+<section class="view" id="view-tai-ve">
+  <h2>Tải về</h2>
+  <div class="downloads">
+    <a class="card win" id="dl-win"
+       href="https://github.com/HThanh209/autoclick/releases/latest/download/AutoClicker-Windows.zip">
+      <span class="badge">Máy của bạn</span>
+      <span class="icon">🪟</span>
+      <span class="os">Windows</span>
+      <span class="sub">Windows 10 trở lên · 64-bit</span>
+      <span class="btn">Tải về</span>
+      <span class="size">≈ 11 MB · .zip</span>
+    </a>
 
-<!-- ============ LẦN ĐẦU CHẠY ============ -->
-<h2>Lần đầu chạy</h2>
-<p style="color:var(--fg-muted);margin-top:-6px">Chọn hệ điều hành của bạn:</p>
+    <a class="card mac" id="dl-mac"
+       href="https://github.com/HThanh209/autoclick/releases/latest/download/AutoClicker-macOS-AppleSilicon.zip">
+      <span class="badge">Máy của bạn</span>
+      <span class="icon">🍎</span>
+      <span class="os">macOS</span>
+      <span class="sub">Chip Apple M1 / M2 / M3 / M4</span>
+      <span class="btn">Tải về</span>
+      <span class="size">≈ 11 MB · .zip</span>
+    </a>
+  </div>
 
-<div class="tabs" role="tablist">
-  <button class="tab" data-os="win" role="tab" aria-selected="true"
-          aria-controls="panel-win" id="tab-win">🪟 Windows</button>
-  <button class="tab" data-os="mac" role="tab" aria-selected="false"
-          aria-controls="panel-mac" id="tab-mac">🍎 macOS</button>
-</div>
+  <p style="color:var(--fg-muted);font-size:14px;margin-top:16px">
+    Không chắc Mac của bạn chip gì? Bấm menu  góc trên bên trái →
+    <em>About This Mac</em>. Thấy chữ <em>Apple M…</em> là đúng bản này.
+  </p>
 
-<!-- ---- Windows ---- -->
-<section class="panel" id="panel-win" role="tabpanel" aria-labelledby="tab-win">
-  <h3>Windows chặn lần đầu — đây không phải virus</h3>
-  <p>Bạn sẽ gặp một màn hình xanh chữ tiếng Anh:</p>
-
-  <div class="quote">
-    <strong>“Windows protected your PC”</strong><br>
-    <span class="en">Microsoft Defender SmartScreen prevented an unrecognized app
-    from starting. Running this app might put your PC at risk.</span>
-    <div class="vi"><strong>“Windows đã bảo vệ máy của bạn”</strong> —
-    Microsoft Defender SmartScreen đã chặn một ứng dụng lạ khởi động. Chạy ứng
-    dụng này có thể khiến máy bạn gặp rủi ro.</div>
+  <div class="note warn" id="intel-note" style="display:none">
+    <span class="title">Mac của bạn dùng chip Intel</span>
+    <p>Bản dựng sẵn ở trên chỉ chạy trên chip Apple M, không chạy được trên Intel.
+    Bạn tải mã nguồn từ <a href="https://github.com/HThanh209/autoclick">GitHub</a>
+    rồi chạy <code>bash build_mac.sh</code> để tự tạo file.</p>
   </div>
 
   <div class="note info">
-    <span class="title">Windows không hề tìm thấy mã độc</span>
-    <p>Chữ <em>“ứng dụng lạ”</em> nghĩa là <strong>“tôi chưa từng thấy file này
-    bao giờ”</strong>, chứ không phải “file này nguy hiểm”. Mọi phần mềm nhỏ
-    chưa mua chứng chỉ ký số đều bị chặn y hệt.</p>
+    <span class="title">Tải xong rồi?</span>
+    <p>Lần đầu mở, Windows và macOS đều sẽ chặn app lại vì chưa có chứng chỉ ký số.
+    Xem mục <strong>Lần đầu chạy</strong> để biết cách bỏ qua.</p>
   </div>
 
-  <h3>Cách chạy</h3>
+  <div class="next"><button data-goto="dung-the-nao">Dùng thế nào →</button></div>
+</section>
+
+<!-- ============ 2. DÙNG THẾ NÀO ============ -->
+<section class="view" id="view-dung-the-nao" hidden>
+  <h2>Dùng thế nào</h2>
   <ol class="steps">
-    <li>Bấm dòng chữ gạch chân <span class="btn-name">More info</span>
-    <em>(Thông tin thêm)</em></li>
-    <li>Hiện thêm nút <span class="btn-name">Run anyway</span> <em>(Vẫn chạy)</em>
-    ở góc dưới bên phải → bấm vào</li>
+    <li>Giải nén rồi mở <strong>AutoClicker</strong> lên.</li>
+    <li>Bấm <span class="btn-name">+ Chọn vị trí</span> — cửa sổ tool thu nhỏ xuống,
+    bạn click chuột trái vào chỗ cần click. Tọa độ được lưu lại.</li>
+    <li>Lặp lại để thêm nhiều điểm. Tool click lần lượt
+    điểm 1 → 2 → 3 rồi quay lại điểm 1.</li>
+    <li>Đặt <strong>giãn cách mỗi click</strong> — 1000 ms = 1 giây.</li>
+    <li>Bấm <span class="btn-name">BẮT ĐẦU</span>, hoặc phím <kbd>F8</kbd>.</li>
   </ol>
-  <p>Chỉ cần làm một lần, lần sau mở không hỏi lại.</p>
 
-  <div class="note warn">
-    <span class="title">Không thấy nút Run anyway?</span>
-    <p>Là do bạn chưa bấm <strong>More info</strong>. Ở màn hình đầu Windows chỉ
-    cho thấy nút <strong>Don’t run</strong> <em>(Đừng chạy)</em>, nhìn như hết
-    đường — nút chạy bị giấu đi để bạn không bấm vội.</p>
-  </div>
-
-  <h3>Click mà phần mềm đích không phản hồi?</h3>
-  <p>Chuột phải vào AutoClicker → <strong>Run as administrator</strong>. Một số
-  game và phần mềm kế toán chạy quyền Admin chỉ nhận click từ tiến trình cùng
-  quyền.</p>
-</section>
-
-<!-- ---- macOS ---- -->
-<section class="panel" id="panel-mac" role="tabpanel" aria-labelledby="tab-mac" hidden>
   <div class="note ok">
-    <span class="title">Không cần cài thêm phần mềm nào</span>
-    <p>Python và mọi thư viện đã nằm sẵn bên trong app. Nhưng phải qua 2 bước
-    dưới đây, thứ tự quan trọng.</p>
+    <span class="title">Phím tắt</span>
+    <p><kbd>F8</kbd> bật / tắt, bấm được từ bất kỳ đâu &nbsp;·&nbsp;
+    <kbd>ESC</kbd> dừng khẩn cấp</p>
   </div>
 
-  <h3>Bước 1 — Cho phép mở app</h3>
-  <p>App chưa mua chứng chỉ ký số của Apple nên macOS chặn lần đầu. Kéo
-  <strong>AutoClicker.app</strong> vào thư mục <strong>Applications</strong>, rồi:</p>
-  <ul>
-    <li><strong>macOS Sequoia (15) trở lên:</strong> mở app một lần cho nó bị chặn →
-    vào <strong>System Settings → Privacy &amp; Security</strong> → kéo xuống gần
-    cuối, thấy dòng báo AutoClicker bị chặn → bấm
-    <span class="btn-name">Open Anyway</span>.</li>
-    <li><strong>macOS Sonoma (14) trở về trước:</strong> chuột phải vào app →
-    <em>Open</em> → <em>Open</em>.</li>
-  </ul>
-
-  <div class="note warn">
-    <span class="title">Báo “AutoClicker is damaged and can’t be opened”?</span>
-    <p>Không phải file hỏng — là cờ kiểm dịch macOS gắn lên mọi file tải từ mạng.
-    Mở <strong>Terminal</strong>, dán lệnh sau rồi Enter:</p>
-    <p><code>xattr -dr com.apple.quarantine /Applications/AutoClicker.app</code></p>
-    <p>Sau đó mở lại app bình thường.</p>
-  </div>
-
-  <h3>Bước 2 — Cấp quyền điều khiển chuột</h3>
-  <p>Vào <strong>System Settings → Privacy &amp; Security</strong>, bật AutoClicker
-  ở 2 mục:</p>
-  <ul>
-    <li><strong>Accessibility</strong> — bắt buộc. Thiếu quyền này thì tool mở lên
-    được nhưng bấm BẮT ĐẦU sẽ không click gì cả.</li>
-    <li><strong>Input Monitoring</strong> — để bắt phím tắt <kbd>F8</kbd>/<kbd>ESC</kbd>.
-    Bỏ qua cũng được, chỉ mất phím tắt, phải bấm nút trên cửa sổ.</li>
-  </ul>
-
-  <div class="note warn">
-    <span class="title">Cập nhật bản mới mà tool ngừng click?</span>
-    <p>macOS gắn quyền vào từng file cụ thể, nên bản mới bị coi là app khác. Vào
-    <strong>Accessibility</strong>, chọn AutoClicker, bấm <strong>−</strong> để
-    xóa, rồi bấm <strong>+</strong> thêm lại app mới.</p>
-  </div>
-
-  <p style="color:var(--fg-muted);font-size:14px">Đây là cơ chế bảo mật của Apple,
-  mọi tool điều khiển chuột trên Mac đều phải xin 2 quyền này.</p>
+  <div class="next"><button data-goto="luu-bo">Lưu bộ vị trí →</button></div>
 </section>
 
-<!-- ============ DÙNG THẾ NÀO ============ -->
-<h2>Dùng thế nào</h2>
-<ol class="steps">
-  <li>Giải nén rồi mở <strong>AutoClicker</strong> lên.</li>
-  <li>Bấm <span class="btn-name">+ Chọn vị trí</span> — cửa sổ tool thu nhỏ xuống,
-  bạn click chuột trái vào chỗ cần click. Tọa độ được lưu lại.</li>
-  <li>Lặp lại để thêm nhiều điểm. Tool click lần lượt
-  điểm 1 → 2 → 3 rồi quay lại điểm 1.</li>
-  <li>Đặt <strong>giãn cách mỗi click</strong> — 1000 ms = 1 giây.</li>
-  <li>Bấm <span class="btn-name">BẮT ĐẦU</span>, hoặc phím <kbd>F8</kbd>.</li>
-</ol>
+<!-- ============ 3. LƯU BỘ VỊ TRÍ ============ -->
+<section class="view" id="view-luu-bo" hidden>
+  <h2>Lưu nhiều bộ vị trí</h2>
+  <p>Không phải chọn lại từ đầu mỗi lần. Đặt tên rồi lưu, lần sau chỉ việc chọn
+  tên trong danh sách là toàn bộ vị trí và giãn cách hiện ra y như cũ.</p>
 
-<div class="note ok">
-  <span class="title">Phím tắt</span>
-  <p><kbd>F8</kbd> bật / tắt, bấm được từ bất kỳ đâu &nbsp;·&nbsp;
-  <kbd>ESC</kbd> dừng khẩn cấp</p>
-</div>
+  <ol class="steps">
+    <li>Chọn xong các vị trí và đặt giãn cách như bình thường.</li>
+    <li>Bấm <span class="btn-name">Lưu bộ này</span> → gõ tên, ví dụ
+    <em>Trang chủ</em> → OK.</li>
+    <li>Làm bộ khác: bấm <span class="btn-name">Xóa hết</span>, chọn các vị trí mới,
+    rồi lưu với tên khác, ví dụ <em>Menu sản phẩm</em>.</li>
+    <li>Về sau chỉ cần chọn tên ở ô <strong>Bộ vị trí đã lưu</strong> trên cùng —
+    danh sách vị trí tự nạp lại, bấm <span class="btn-name">BẮT ĐẦU</span> là chạy.</li>
+  </ol>
 
-<!-- ============ BỘ VỊ TRÍ ============ -->
-<h2>Lưu nhiều bộ vị trí</h2>
-<p>Không phải chọn lại từ đầu mỗi lần. Đặt tên rồi lưu, lần sau chỉ việc chọn
-tên trong danh sách là toàn bộ vị trí và giãn cách hiện ra y như cũ.</p>
+  <div class="note info">
+    <span class="title">Mỗi bộ nhớ luôn cả giãn cách</span>
+    <p>Bộ <em>Trang chủ</em> để 1000 ms, bộ <em>Menu sản phẩm</em> để 250 ms — chọn
+    bộ nào thì ô giãn cách tự đổi theo bộ đó, không phải chỉnh tay lại.</p>
+  </div>
 
-<ol class="steps">
-  <li>Chọn xong các vị trí và đặt giãn cách như bình thường.</li>
-  <li>Bấm <span class="btn-name">Lưu bộ này</span> → gõ tên, ví dụ
-  <em>Trang chủ</em> → OK.</li>
-  <li>Làm bộ khác: bấm <span class="btn-name">Xóa hết</span>, chọn các vị trí mới,
-  rồi lưu với tên khác, ví dụ <em>Menu sản phẩm</em>.</li>
-  <li>Về sau chỉ cần chọn tên ở ô <strong>Bộ vị trí đã lưu</strong> trên cùng —
-  danh sách vị trí tự nạp lại, bấm <span class="btn-name">BẮT ĐẦU</span> là chạy.</li>
-</ol>
+  <div class="note warn">
+    <span class="title">Vài điều cần biết</span>
+    <p>· Sửa vị trí trong một bộ xong <strong>phải bấm Lưu bộ này lần nữa</strong>
+    (chọn đúng tên cũ) thì thay đổi mới được ghi lại.</p>
+    <p>· Đang chạy thì không đổi bộ được — bấm dừng trước đã.</p>
+    <p>· Tọa độ gắn với <strong>độ phân giải màn hình</strong>. Đổi màn hình, đổi
+    mức phóng to, hay cửa sổ phần mềm đích nằm chỗ khác thì bộ cũ sẽ click trượt,
+    phải chọn lại vị trí.</p>
+  </div>
 
-<div class="note info">
-  <span class="title">Mỗi bộ nhớ luôn cả giãn cách</span>
-  <p>Bộ <em>Trang chủ</em> để 1000 ms, bộ <em>Menu sản phẩm</em> để 250 ms — chọn
-  bộ nào thì ô giãn cách tự đổi theo bộ đó, không phải chỉnh tay lại.</p>
-</div>
+  <p style="color:var(--fg-muted);font-size:14px">Các bộ được lưu trong file
+  <code>profiles.json</code> — trên Windows ở <code>%APPDATA%\AutoClicker</code>,
+  trên macOS ở <code>~/Library/Application Support/AutoClicker</code>. Gỡ app không
+  làm mất, chép file này sang máy khác là dùng lại được.</p>
 
-<div class="note warn">
-  <span class="title">Vài điều cần biết</span>
-  <p>· Sửa vị trí trong một bộ xong <strong>phải bấm Lưu bộ này lần nữa</strong>
-  (chọn đúng tên cũ) thì thay đổi mới được ghi lại.</p>
-  <p>· Đang chạy thì không đổi bộ được — bấm dừng trước đã.</p>
-  <p>· Tọa độ gắn với <strong>độ phân giải màn hình</strong>. Đổi màn hình, đổi
-  mức phóng to, hay cửa sổ phần mềm đích nằm chỗ khác thì bộ cũ sẽ click trượt,
-  phải chọn lại vị trí.</p>
-</div>
+  <div class="next"><button data-goto="lan-dau">Lần đầu chạy →</button></div>
+</section>
 
-<p style="color:var(--fg-muted);font-size:14px">Các bộ được lưu trong file
-<code>profiles.json</code> — trên Windows ở <code>%APPDATA%\AutoClicker</code>,
-trên macOS ở <code>~/Library/Application Support/AutoClicker</code>. Gỡ app không
-làm mất, chép file này sang máy khác là dùng lại được.</p>
+<!-- ============ 4. LẦN ĐẦU CHẠY ============ -->
+<section class="view" id="view-lan-dau" hidden>
+  <h2>Lần đầu chạy</h2>
+  <p style="color:var(--fg-muted);margin-top:-8px">Chọn hệ điều hành của bạn:</p>
 
-<!-- ============ FAQ ============ -->
-<h2>Câu hỏi hay gặp</h2>
+  <div class="tabs" role="tablist">
+    <button class="tab" data-os="win" role="tab" aria-selected="true"
+            aria-controls="panel-win" id="tab-win">🪟 Windows</button>
+    <button class="tab" data-os="mac" role="tab" aria-selected="false"
+            aria-controls="panel-mac" id="tab-mac">🍎 macOS</button>
+  </div>
 
-<h3>Dùng trực tiếp trên web được không?</h3>
-<p>Không. Trình duyệt không cho phép trang web điều khiển con chuột thật của hệ
-điều hành — nếu làm được thì mọi website đều chiếm được máy bạn. Vì vậy tool bắt
-buộc phải tải về máy.</p>
+  <!-- ---- Windows ---- -->
+  <div class="panel" id="panel-win" role="tabpanel" aria-labelledby="tab-win">
+    <h3>Windows chặn lần đầu — đây không phải virus</h3>
+    <p>Bạn sẽ gặp một màn hình xanh chữ tiếng Anh:</p>
 
-<h3>Tool có tự cập nhật không?</h3>
-<p><strong>Không tự cập nhật, nhưng có tự báo.</strong> Số phiên bản hiện ngay trên
-tiêu đề cửa sổ. Mỗi lần mở, tool hỏi ngầm xem đã có bản mới chưa — nếu có thì hiện
-một dòng xanh ở cuối cửa sổ, bấm vào là mở trang này để tải.</p>
-<p>Tool <strong>không tự tải và không tự cài đè</strong> — bạn toàn quyền quyết định
-có nâng cấp hay không. Máy không có mạng thì tool bỏ qua, chạy bình thường.</p>
+    <div class="quote">
+      <strong>“Windows protected your PC”</strong><br>
+      <span class="en">Microsoft Defender SmartScreen prevented an unrecognized app
+      from starting. Running this app might put your PC at risk.</span>
+      <div class="vi"><strong>“Windows đã bảo vệ máy của bạn”</strong> —
+      Microsoft Defender SmartScreen đã chặn một ứng dụng lạ khởi động. Chạy ứng
+      dụng này có thể khiến máy bạn gặp rủi ro.</div>
+    </div>
 
-<div class="note info">
-  <span class="title">Nâng cấp thế nào</span>
-  <p>Tải bản mới, giải nén đè lên bản cũ. <strong>Các bộ vị trí đã lưu không bị
-  mất</strong> vì nằm ở thư mục cấu hình riêng, không nằm trong app. Riêng macOS
-  nhớ cấp lại quyền Accessibility cho file mới.</p>
-</div>
+    <div class="note info">
+      <span class="title">Windows không hề tìm thấy mã độc</span>
+      <p>Chữ <em>“ứng dụng lạ”</em> nghĩa là <strong>“tôi chưa từng thấy file này
+      bao giờ”</strong>, chứ không phải “file này nguy hiểm”. Mọi phần mềm nhỏ
+      chưa mua chứng chỉ ký số đều bị chặn y hệt.</p>
+    </div>
 
-<h3>Làm sao hết cảnh báo bảo mật?</h3>
-<p>Phải mua chứng chỉ ký số: Windows khoảng 200–600 USD/năm, Apple Developer
-Program 99 USD/năm. Chỉ đáng nếu phát hành ra ngoài cho người lạ. Dùng nội bộ thì
-cứ bấm qua cảnh báo một lần là xong.</p>
+    <h3>Cách chạy</h3>
+    <ol class="steps">
+      <li>Bấm dòng chữ gạch chân <span class="btn-name">More info</span>
+      <em>(Thông tin thêm)</em></li>
+      <li>Hiện thêm nút <span class="btn-name">Run anyway</span> <em>(Vẫn chạy)</em>
+      ở góc dưới bên phải → bấm vào</li>
+    </ol>
+    <p>Chỉ cần làm một lần, lần sau mở không hỏi lại.</p>
+
+    <div class="note warn">
+      <span class="title">Không thấy nút Run anyway?</span>
+      <p>Là do bạn chưa bấm <strong>More info</strong>. Ở màn hình đầu Windows chỉ
+      cho thấy nút <strong>Don’t run</strong> <em>(Đừng chạy)</em>, nhìn như hết
+      đường — nút chạy bị giấu đi để bạn không bấm vội.</p>
+    </div>
+
+    <h3>Click mà phần mềm đích không phản hồi?</h3>
+    <p>Chuột phải vào AutoClicker → <strong>Run as administrator</strong>. Một số
+    game và phần mềm kế toán chạy quyền Admin chỉ nhận click từ tiến trình cùng
+    quyền.</p>
+  </div>
+
+  <!-- ---- macOS ---- -->
+  <div class="panel" id="panel-mac" role="tabpanel" aria-labelledby="tab-mac" hidden>
+    <div class="note ok">
+      <span class="title">Không cần cài thêm phần mềm nào</span>
+      <p>Python và mọi thư viện đã nằm sẵn bên trong app. Nhưng phải qua 2 bước
+      dưới đây, thứ tự quan trọng.</p>
+    </div>
+
+    <h3>Bước 1 — Cho phép mở app</h3>
+    <p>App chưa mua chứng chỉ ký số của Apple nên macOS chặn lần đầu. Kéo
+    <strong>AutoClicker.app</strong> vào thư mục <strong>Applications</strong>, rồi:</p>
+    <ul>
+      <li><strong>macOS Sequoia (15) trở lên:</strong> mở app một lần cho nó bị chặn →
+      vào <strong>System Settings → Privacy &amp; Security</strong> → kéo xuống gần
+      cuối, thấy dòng báo AutoClicker bị chặn → bấm
+      <span class="btn-name">Open Anyway</span>.</li>
+      <li><strong>macOS Sonoma (14) trở về trước:</strong> chuột phải vào app →
+      <em>Open</em> → <em>Open</em>.</li>
+    </ul>
+
+    <div class="note warn">
+      <span class="title">Báo “AutoClicker is damaged and can’t be opened”?</span>
+      <p>Không phải file hỏng — là cờ kiểm dịch macOS gắn lên mọi file tải từ mạng.
+      Mở <strong>Terminal</strong>, dán lệnh sau rồi Enter:</p>
+      <p><code>xattr -dr com.apple.quarantine /Applications/AutoClicker.app</code></p>
+      <p>Sau đó mở lại app bình thường.</p>
+    </div>
+
+    <h3>Bước 2 — Cấp quyền điều khiển chuột</h3>
+    <p>Vào <strong>System Settings → Privacy &amp; Security</strong>, bật AutoClicker
+    ở 2 mục:</p>
+    <ul>
+      <li><strong>Accessibility</strong> — bắt buộc. Thiếu quyền này thì tool mở lên
+      được nhưng bấm BẮT ĐẦU sẽ không click gì cả.</li>
+      <li><strong>Input Monitoring</strong> — để bắt phím tắt <kbd>F8</kbd>/<kbd>ESC</kbd>.
+      Bỏ qua cũng được, chỉ mất phím tắt, phải bấm nút trên cửa sổ.</li>
+    </ul>
+
+    <div class="note warn">
+      <span class="title">Cập nhật bản mới mà tool ngừng click?</span>
+      <p>macOS gắn quyền vào từng file cụ thể, nên bản mới bị coi là app khác. Vào
+      <strong>Accessibility</strong>, chọn AutoClicker, bấm <strong>−</strong> để
+      xóa, rồi bấm <strong>+</strong> thêm lại app mới.</p>
+    </div>
+
+    <p style="color:var(--fg-muted);font-size:14px">Đây là cơ chế bảo mật của Apple,
+    mọi tool điều khiển chuột trên Mac đều phải xin 2 quyền này.</p>
+  </div>
+
+  <div class="next"><button data-goto="hoi-dap">Câu hỏi hay gặp →</button></div>
+</section>
+
+<!-- ============ 5. CÂU HỎI HAY GẶP ============ -->
+<section class="view" id="view-hoi-dap" hidden>
+  <h2>Câu hỏi hay gặp</h2>
+
+  <h3>Dùng trực tiếp trên web được không?</h3>
+  <p>Không. Trình duyệt không cho phép trang web điều khiển con chuột thật của hệ
+  điều hành — nếu làm được thì mọi website đều chiếm được máy bạn. Vì vậy tool bắt
+  buộc phải tải về máy.</p>
+
+  <h3>Tool có tự cập nhật không?</h3>
+  <p><strong>Không tự cập nhật, nhưng có tự báo.</strong> Số phiên bản hiện ngay trên
+  tiêu đề cửa sổ. Mỗi lần mở, tool hỏi ngầm xem đã có bản mới chưa — nếu có thì hiện
+  một dòng xanh ở cuối cửa sổ, bấm vào là mở trang này để tải.</p>
+  <p>Tool <strong>không tự tải và không tự cài đè</strong> — bạn toàn quyền quyết định
+  có nâng cấp hay không. Máy không có mạng thì tool bỏ qua, chạy bình thường.</p>
+
+  <div class="note info">
+    <span class="title">Nâng cấp thế nào</span>
+    <p>Tải bản mới, giải nén đè lên bản cũ. <strong>Các bộ vị trí đã lưu không bị
+    mất</strong> vì nằm ở thư mục cấu hình riêng, không nằm trong app. Riêng macOS
+    nhớ cấp lại quyền Accessibility cho file mới.</p>
+  </div>
+
+  <h3>Làm sao hết cảnh báo bảo mật?</h3>
+  <p>Phải mua chứng chỉ ký số: Windows khoảng 200–600 USD/năm, Apple Developer
+  Program 99 USD/năm. Chỉ đáng nếu phát hành ra ngoài cho người lạ. Dùng nội bộ thì
+  cứ bấm qua cảnh báo một lần là xong.</p>
+
+  <div class="next"><button data-goto="tai-ve">← Về trang tải</button></div>
+</section>
 
 <footer>
   Auto Clicker
@@ -483,9 +576,45 @@ cứ bấm qua cảnh báo một lần là xong.</p>
     }
   }
 
-  // Tab hướng dẫn: mặc định mở đúng hệ điều hành đang dùng.
+  // ---------- chuyển trang ----------
+  var navBtns = [].slice.call(document.querySelectorAll(".nav button"));
+  var navSelect = document.getElementById("nav-select");
+  var views = [].slice.call(document.querySelectorAll(".view"));
+  var names = navBtns.map(function (b) { return b.dataset.view; });
+
+  function show(name, push) {
+    if (names.indexOf(name) === -1) name = names[0];
+    views.forEach(function (v) { v.hidden = v.id !== "view-" + name; });
+    navBtns.forEach(function (b) {
+      b.setAttribute("aria-current", b.dataset.view === name ? "true" : "false");
+    });
+    navSelect.value = name;
+    if (push && location.hash !== "#" + name) {
+      history.pushState(null, "", "#" + name);
+    }
+    window.scrollTo(0, 0);
+  }
+
+  navBtns.forEach(function (b) {
+    b.addEventListener("click", function () { show(b.dataset.view, true); });
+  });
+  navSelect.addEventListener("change", function () { show(navSelect.value, true); });
+
+  // Nút "trang tiếp theo" ở cuối mỗi mục
+  document.querySelectorAll("[data-goto]").forEach(function (b) {
+    b.addEventListener("click", function () { show(b.dataset.goto, true); });
+  });
+
+  // Bấm nút back/forward của trình duyệt
+  window.addEventListener("popstate", function () {
+    show(location.hash.replace("#", ""), false);
+  });
+
+  show(location.hash.replace("#", "") || "tai-ve", false);
+
+  // ---------- tab hệ điều hành trong mục "Lần đầu chạy" ----------
   var tabs = [].slice.call(document.querySelectorAll(".tab"));
-  function select(os) {
+  function selectOs(os) {
     tabs.forEach(function (t) {
       var on = t.dataset.os === os;
       t.setAttribute("aria-selected", on ? "true" : "false");
@@ -493,9 +622,9 @@ cứ bấm qua cảnh báo một lần là xong.</p>
     });
   }
   tabs.forEach(function (t) {
-    t.addEventListener("click", function () { select(t.dataset.os); });
+    t.addEventListener("click", function () { selectOs(t.dataset.os); });
   });
-  select(isMac ? "mac" : "win");
+  selectOs(isMac ? "mac" : "win");
 })();
 </script>
 </body>

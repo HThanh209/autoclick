@@ -284,7 +284,7 @@
     <button data-view="tai-ve" aria-current="true">Tải về</button>
     <button data-view="dung-the-nao">Dùng thế nào</button>
     <button data-view="luu-bo">Bộ lọc lưu các nhóm vị trí</button>
-    <button data-view="lan-dau">Lần đầu chạy</button>
+    <button data-view="lan-dau">Cấu hình sử dụng</button>
     <button data-view="hoi-dap">Câu hỏi hay gặp</button>
   </nav>
   <div class="wrap nav-select">
@@ -292,7 +292,7 @@
       <option value="tai-ve">Tải về</option>
       <option value="dung-the-nao">Dùng thế nào</option>
       <option value="luu-bo">Bộ lọc lưu các nhóm vị trí</option>
-      <option value="lan-dau">Lần đầu chạy</option>
+      <option value="lan-dau">Cấu hình sử dụng</option>
       <option value="hoi-dap">Câu hỏi hay gặp</option>
     </select>
   </div>
@@ -340,7 +340,7 @@
   <div class="note info">
     <span class="title">Tải xong rồi?</span>
     <p>Lần đầu mở, Windows và macOS đều sẽ chặn app lại vì chưa có chứng chỉ ký số.
-    Xem mục <strong>Lần đầu chạy</strong> để biết cách bỏ qua.</p>
+    Xem mục <strong>Cấu hình sử dụng</strong> để biết cách bỏ qua.</p>
   </div>
 
   <div class="next"><button data-goto="dung-the-nao">Dùng thế nào →</button></div>
@@ -405,12 +405,12 @@
   trên macOS ở <code>~/Library/Application Support/AutoClicker</code>. Gỡ app không
   làm mất, chép file này sang máy khác là dùng lại được.</p>
 
-  <div class="next"><button data-goto="lan-dau">Lần đầu chạy →</button></div>
+  <div class="next"><button data-goto="lan-dau">Cấu hình sử dụng →</button></div>
 </section>
 
 <!-- ============ 4. LẦN ĐẦU CHẠY ============ -->
 <section class="view" id="view-lan-dau" hidden>
-  <h2>Lần đầu chạy</h2>
+  <h2>Cấu hình sử dụng</h2>
   <p style="color:var(--fg-muted);margin-top:-8px">Chọn hệ điều hành của bạn:</p>
 
   <div class="tabs" role="tablist">
@@ -547,7 +547,7 @@
     <em>“AutoClicker is damaged and can’t be opened”</em></li>
   </ul>
   <p>Cách bấm qua nằm ở mục
-  <button class="link-like" data-goto="lan-dau">Lần đầu chạy</button>.</p>
+  <button class="link-like" data-goto="lan-dau">Cấu hình sử dụng</button>.</p>
 
   <p><strong>Muốn hết hẳn</strong> thì phải mua chứng chỉ ký số: Windows khoảng
   200–600 USD/năm, Apple Developer Program 99 USD/năm. Chỉ đáng nếu phát hành ra
@@ -636,7 +636,7 @@
 
   show(location.hash.replace("#", "") || "tai-ve", false);
 
-  // ---------- tab hệ điều hành trong mục "Lần đầu chạy" ----------
+  // ---------- tab hệ điều hành trong mục "Cấu hình sử dụng" ----------
   var tabs = [].slice.call(document.querySelectorAll(".tab"));
   function selectOs(os) {
     tabs.forEach(function (t) {

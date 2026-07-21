@@ -17,6 +17,32 @@ Chạy trên Windows và macOS.
 | `F8` | Bật / tắt, bấm được từ bất kỳ đâu |
 | `ESC` | Dừng khẩn cấp |
 
+## Lưu nhiều bộ vị trí
+
+Đặt tên rồi lưu, lần sau chọn tên là nạp lại toàn bộ vị trí + giãn cách, khỏi
+chọn lại từ đầu:
+
+1. Chọn xong các vị trí và giãn cách
+2. Bấm **Lưu bộ này** → gõ tên (ví dụ *Trang chủ*)
+3. Bộ khác: **Xóa hết** → chọn vị trí mới → lưu tên khác (*Menu sản phẩm*)
+4. Về sau chọn tên ở ô **Bộ vị trí đã lưu** trên cùng là xong
+
+Mỗi bộ nhớ luôn giãn cách riêng. Sửa vị trí trong một bộ thì phải bấm **Lưu bộ
+này** lần nữa với đúng tên cũ mới ghi lại được. Đang chạy thì không đổi bộ được.
+
+Tọa độ gắn với độ phân giải màn hình — đổi màn hình hoặc đổi mức phóng to thì bộ
+cũ sẽ click trượt, phải chọn lại.
+
+Lưu ở `profiles.json`:
+
+| Hệ điều hành | Đường dẫn |
+|---|---|
+| Windows | `%APPDATA%\AutoClicker\profiles.json` |
+| macOS | `~/Library/Application Support/AutoClicker/profiles.json` |
+
+Ghi bằng cách viết file tạm rồi `os.replace` — tắt app giữa chừng không làm hỏng
+file cũ. File hỏng thì app bỏ qua và khởi động với danh sách rỗng, không crash.
+
 ## Chạy từ mã nguồn
 
 ```bash

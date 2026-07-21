@@ -263,60 +263,6 @@
   rồi chạy <code>bash build_mac.sh</code> để tự tạo file.</p>
 </div>
 
-<!-- ============ DÙNG THẾ NÀO ============ -->
-<h2>Dùng thế nào</h2>
-<ol class="steps">
-  <li>Giải nén rồi mở <strong>AutoClicker</strong> lên.</li>
-  <li>Bấm <span class="btn-name">+ Chọn vị trí</span> — cửa sổ tool thu nhỏ xuống,
-  bạn click chuột trái vào chỗ cần click. Tọa độ được lưu lại.</li>
-  <li>Lặp lại để thêm nhiều điểm. Tool click lần lượt
-  điểm 1 → 2 → 3 rồi quay lại điểm 1.</li>
-  <li>Đặt <strong>giãn cách mỗi click</strong> — 1000 ms = 1 giây.</li>
-  <li>Bấm <span class="btn-name">BẮT ĐẦU</span>, hoặc phím <kbd>F8</kbd>.</li>
-</ol>
-
-<div class="note ok">
-  <span class="title">Phím tắt</span>
-  <p><kbd>F8</kbd> bật / tắt, bấm được từ bất kỳ đâu &nbsp;·&nbsp;
-  <kbd>ESC</kbd> dừng khẩn cấp</p>
-</div>
-
-<!-- ============ BỘ VỊ TRÍ ============ -->
-<h2>Lưu nhiều bộ vị trí</h2>
-<p>Không phải chọn lại từ đầu mỗi lần. Đặt tên rồi lưu, lần sau chỉ việc chọn
-tên trong danh sách là toàn bộ vị trí và giãn cách hiện ra y như cũ.</p>
-
-<ol class="steps">
-  <li>Chọn xong các vị trí và đặt giãn cách như bình thường.</li>
-  <li>Bấm <span class="btn-name">Lưu bộ này</span> → gõ tên, ví dụ
-  <em>Trang chủ</em> → OK.</li>
-  <li>Làm bộ khác: bấm <span class="btn-name">Xóa hết</span>, chọn các vị trí mới,
-  rồi lưu với tên khác, ví dụ <em>Menu sản phẩm</em>.</li>
-  <li>Về sau chỉ cần chọn tên ở ô <strong>Bộ vị trí đã lưu</strong> trên cùng —
-  danh sách vị trí tự nạp lại, bấm <span class="btn-name">BẮT ĐẦU</span> là chạy.</li>
-</ol>
-
-<div class="note info">
-  <span class="title">Mỗi bộ nhớ luôn cả giãn cách</span>
-  <p>Bộ <em>Trang chủ</em> để 1000 ms, bộ <em>Menu sản phẩm</em> để 250 ms — chọn
-  bộ nào thì ô giãn cách tự đổi theo bộ đó, không phải chỉnh tay lại.</p>
-</div>
-
-<div class="note warn">
-  <span class="title">Vài điều cần biết</span>
-  <p>· Sửa vị trí trong một bộ xong <strong>phải bấm Lưu bộ này lần nữa</strong>
-  (chọn đúng tên cũ) thì thay đổi mới được ghi lại.</p>
-  <p>· Đang chạy thì không đổi bộ được — bấm dừng trước đã.</p>
-  <p>· Tọa độ gắn với <strong>độ phân giải màn hình</strong>. Đổi màn hình, đổi
-  mức phóng to, hay cửa sổ phần mềm đích nằm chỗ khác thì bộ cũ sẽ click trượt,
-  phải chọn lại vị trí.</p>
-</div>
-
-<p style="color:var(--fg-muted);font-size:14px">Các bộ được lưu trong file
-<code>profiles.json</code> — trên Windows ở <code>%APPDATA%\AutoClicker</code>,
-trên macOS ở <code>~/Library/Application Support/AutoClicker</code>. Gỡ app không
-làm mất, chép file này sang máy khác là dùng lại được.</p>
-
 <!-- ============ LẦN ĐẦU CHẠY ============ -->
 <h2>Lần đầu chạy</h2>
 <p style="color:var(--fg-muted);margin-top:-6px">Chọn hệ điều hành của bạn:</p>
@@ -420,6 +366,60 @@ làm mất, chép file này sang máy khác là dùng lại được.</p>
   mọi tool điều khiển chuột trên Mac đều phải xin 2 quyền này.</p>
 </section>
 
+<!-- ============ DÙNG THẾ NÀO ============ -->
+<h2>Dùng thế nào</h2>
+<ol class="steps">
+  <li>Giải nén rồi mở <strong>AutoClicker</strong> lên.</li>
+  <li>Bấm <span class="btn-name">+ Chọn vị trí</span> — cửa sổ tool thu nhỏ xuống,
+  bạn click chuột trái vào chỗ cần click. Tọa độ được lưu lại.</li>
+  <li>Lặp lại để thêm nhiều điểm. Tool click lần lượt
+  điểm 1 → 2 → 3 rồi quay lại điểm 1.</li>
+  <li>Đặt <strong>giãn cách mỗi click</strong> — 1000 ms = 1 giây.</li>
+  <li>Bấm <span class="btn-name">BẮT ĐẦU</span>, hoặc phím <kbd>F8</kbd>.</li>
+</ol>
+
+<div class="note ok">
+  <span class="title">Phím tắt</span>
+  <p><kbd>F8</kbd> bật / tắt, bấm được từ bất kỳ đâu &nbsp;·&nbsp;
+  <kbd>ESC</kbd> dừng khẩn cấp</p>
+</div>
+
+<!-- ============ BỘ VỊ TRÍ ============ -->
+<h2>Lưu nhiều bộ vị trí</h2>
+<p>Không phải chọn lại từ đầu mỗi lần. Đặt tên rồi lưu, lần sau chỉ việc chọn
+tên trong danh sách là toàn bộ vị trí và giãn cách hiện ra y như cũ.</p>
+
+<ol class="steps">
+  <li>Chọn xong các vị trí và đặt giãn cách như bình thường.</li>
+  <li>Bấm <span class="btn-name">Lưu bộ này</span> → gõ tên, ví dụ
+  <em>Trang chủ</em> → OK.</li>
+  <li>Làm bộ khác: bấm <span class="btn-name">Xóa hết</span>, chọn các vị trí mới,
+  rồi lưu với tên khác, ví dụ <em>Menu sản phẩm</em>.</li>
+  <li>Về sau chỉ cần chọn tên ở ô <strong>Bộ vị trí đã lưu</strong> trên cùng —
+  danh sách vị trí tự nạp lại, bấm <span class="btn-name">BẮT ĐẦU</span> là chạy.</li>
+</ol>
+
+<div class="note info">
+  <span class="title">Mỗi bộ nhớ luôn cả giãn cách</span>
+  <p>Bộ <em>Trang chủ</em> để 1000 ms, bộ <em>Menu sản phẩm</em> để 250 ms — chọn
+  bộ nào thì ô giãn cách tự đổi theo bộ đó, không phải chỉnh tay lại.</p>
+</div>
+
+<div class="note warn">
+  <span class="title">Vài điều cần biết</span>
+  <p>· Sửa vị trí trong một bộ xong <strong>phải bấm Lưu bộ này lần nữa</strong>
+  (chọn đúng tên cũ) thì thay đổi mới được ghi lại.</p>
+  <p>· Đang chạy thì không đổi bộ được — bấm dừng trước đã.</p>
+  <p>· Tọa độ gắn với <strong>độ phân giải màn hình</strong>. Đổi màn hình, đổi
+  mức phóng to, hay cửa sổ phần mềm đích nằm chỗ khác thì bộ cũ sẽ click trượt,
+  phải chọn lại vị trí.</p>
+</div>
+
+<p style="color:var(--fg-muted);font-size:14px">Các bộ được lưu trong file
+<code>profiles.json</code> — trên Windows ở <code>%APPDATA%\AutoClicker</code>,
+trên macOS ở <code>~/Library/Application Support/AutoClicker</code>. Gỡ app không
+làm mất, chép file này sang máy khác là dùng lại được.</p>
+
 <!-- ============ FAQ ============ -->
 <h2>Câu hỏi hay gặp</h2>
 
@@ -434,8 +434,7 @@ Program 99 USD/năm. Chỉ đáng nếu phát hành ra ngoài cho người lạ.
 cứ bấm qua cảnh báo một lần là xong.</p>
 
 <footer>
-  Mã nguồn mở tại
-  <a href="https://github.com/HThanh209/autoclick">github.com/HThanh209/autoclick</a>
+  Auto Clicker
 </footer>
 
 </div>

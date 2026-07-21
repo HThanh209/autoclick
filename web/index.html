@@ -243,6 +243,12 @@
     border-radius: 6px; padding: 1px 8px; background: var(--bg-soft);
   }
   .btn-name { font-weight: 660; color: var(--accent); }
+  /* Nút nhảy sang mục khác, trông như đường link cho đỡ nặng nề */
+  .link-like {
+    border: 0; background: none; padding: 0;
+    font: inherit; font-weight: 620; color: var(--accent);
+    text-decoration: underline; cursor: pointer;
+  }
   ul { padding-left: 20px; }
   li { margin: 7px 0; }
 
@@ -532,10 +538,28 @@
     nhớ cấp lại quyền Accessibility cho file mới.</p>
   </div>
 
-  <h3>Làm sao hết cảnh báo bảo mật?</h3>
-  <p>Phải mua chứng chỉ ký số: Windows khoảng 200–600 USD/năm, Apple Developer
-  Program 99 USD/năm. Chỉ đáng nếu phát hành ra ngoài cho người lạ. Dùng nội bộ thì
-  cứ bấm qua cảnh báo một lần là xong.</p>
+  <h3>Làm sao hết màn hình chặn lúc mở app?</h3>
+  <p>Ý nói 2 cảnh báo này — cái nào cũng chỉ hiện <strong>lần đầu</strong>:</p>
+  <ul>
+    <li><strong>Windows:</strong> màn hình xanh <em>“Windows protected your PC”</em>
+    (Microsoft Defender SmartScreen)</li>
+    <li><strong>macOS:</strong> Gatekeeper không cho mở, hoặc báo
+    <em>“AutoClicker is damaged and can’t be opened”</em></li>
+  </ul>
+  <p>Cách bấm qua nằm ở mục
+  <button class="link-like" data-goto="lan-dau">Lần đầu chạy</button>.</p>
+
+  <p><strong>Muốn hết hẳn</strong> thì phải mua chứng chỉ ký số: Windows khoảng
+  200–600 USD/năm, Apple Developer Program 99 USD/năm. Chỉ đáng nếu phát hành ra
+  ngoài cho người lạ — người lạ thấy màn hình chặn thường bỏ luôn không dám chạy.
+  Dùng nội bộ thì cứ bấm qua một lần là xong, không cần tốn tiền.</p>
+
+  <div class="note info">
+    <span class="title">Vì sao bị chặn?</span>
+    <p>Không phải app có mã độc. Cả Windows lẫn macOS đều chặn mọi phần mềm chưa
+    mua chứng chỉ ký số — đó là cách hệ điều hành nói “tôi không biết ai làm ra
+    file này”, chứ không phải “file này nguy hiểm”.</p>
+  </div>
 
   <div class="next"><button data-goto="tai-ve">← Về trang tải</button></div>
 </section>

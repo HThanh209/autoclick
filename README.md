@@ -94,6 +94,29 @@ bash build_mac.sh
 > trên máy Mac. Đó là lý do dùng GitHub Actions — runner `macos-latest` và
 > `macos-13` là máy Mac thật, miễn phí cho repo public.
 
+## Phiên bản và cập nhật
+
+Số phiên bản hiện trên tiêu đề cửa sổ (`Auto Clicker v1.2.0`).
+
+Lúc mở app, một luồng nền hỏi GitHub xem bản mới nhất là gì. Có bản mới hơn thì
+hiện một dòng xanh ở cuối cửa sổ, bấm vào là mở trình duyệt tới trang tải.
+**App không tự tải và không tự cài đè** — người dùng tự quyết.
+
+Không có mạng thì bỏ qua im lặng, không báo lỗi, không làm chậm lúc mở.
+
+`APP_VERSION` trong `autoclicker.py` phải khớp với tag git. Workflow có bước kiểm
+tra, tag `v1.3.0` mà quên sửa hằng số là build đỏ ngay — vì nếu lọt, app sẽ khai
+sai phiên bản và tự cho rằng mình đã cũ ngay sau khi vừa cập nhật.
+
+Khi phát hành bản mới:
+
+```bash
+# 1. Sửa APP_VERSION trong autoclicker.py thành 1.3.0
+# 2. Commit
+git tag v1.3.0
+git push origin main && git push origin v1.3.0
+```
+
 ## Trang tải về
 
 `web/index.html` là trang giới thiệu + link tải, `app.py` là web server tĩnh

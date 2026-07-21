@@ -32,6 +32,20 @@ jobs:
         with:
           python-version: "3.12"
 
+      # Quên sửa APP_VERSION trước khi tag thì app sẽ báo phiên bản sai và
+      # tự cho rằng mình đã cũ ngay sau khi cập nhật. Chặn ngay ở đây.
+      - name: Kiểm tra APP_VERSION khớp tag
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          code=$(python -c "import re,pathlib;print(re.search(r'APP_VERSION = \"([^\"]+)\"', pathlib.Path('autoclicker.py').read_text(encoding='utf-8')).group(1))")
+          echo "tag=$tag  APP_VERSION=$code"
+          if [ "$tag" != "$code" ]; then
+            echo "::error::Tag $tag khong khop APP_VERSION $code trong autoclicker.py"
+            exit 1
+          fi
+
       - name: Cài thư viện
         run: pip install -r requirements.txt
 

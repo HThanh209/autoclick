@@ -13,11 +13,21 @@ import sys
 import threading
 import time
 import tkinter as tk
+import urllib.error
+import urllib.request
+import webbrowser
 from pathlib import Path
 from tkinter import font as tkfont
 from tkinter import messagebox, simpledialog, ttk
 
 from pynput import keyboard, mouse
+
+# Phải khớp với tag git khi phát hành. Workflow build có bước kiểm tra,
+# tag v1.2.0 mà quên sửa dòng này là build đỏ ngay.
+APP_VERSION = "1.2.0"
+
+RELEASES_API = "https://api.github.com/repos/HThanh209/autoclick/releases/latest"
+RELEASES_PAGE = "https://github.com/HThanh209/autoclick/releases/latest"
 
 HOTKEY_TOGGLE = "<f8>"
 HOTKEY_STOP = "<esc>"
@@ -44,6 +54,37 @@ def config_dir():
 
 
 PROFILES_PATH = config_dir() / "profiles.json"
+
+
+def parse_version(text):
+    """'v1.2.0' -> (1, 2, 0). Phần không phải số coi như 0 để không nổ."""
+    parts = []
+    for chunk in str(text).strip().lstrip("vV").split("."):
+        digits = ""
+        for ch in chunk:
+            if not ch.isdigit():
+                break
+            digits += ch
+        parts.append(int(digits) if digits else 0)
+    return tuple(parts) or (0,)
+
+
+def fetch_latest_version(timeout=6):
+    """Hỏi GitHub xem bản mới nhất là gì. Lỗi mạng thì trả None."""
+    req = urllib.request.Request(
+        RELEASES_API,
+        headers={
+            "User-Agent": f"AutoClicker/{APP_VERSION}",
+            "Accept": "application/vnd.github+json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            data = json.load(resp)
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError):
+        return None
+    tag = data.get("tag_name")
+    return str(tag) if tag else None
 
 
 def load_profiles():
@@ -156,6 +197,7 @@ class AutoClicker:
 
         self._build_ui()
         self._refresh_profile_list()
+        self._start_update_check()
         self._start_hotkeys()
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
         self.root.after(50, self._drain_events)
@@ -163,7 +205,7 @@ class AutoClicker:
     # ---------- UI ----------
 
     def _build_ui(self):
-        self.root.title("Auto Clicker")
+        self.root.title(f"Auto Clicker  v{APP_VERSION}")
         self.root.resizable(False, False)
 
         frm = ttk.Frame(self.root, padding=12)
@@ -240,6 +282,14 @@ class AutoClicker:
             foreground="#888",
         ).grid(row=10, column=0, columnspan=3, sticky="w", pady=(8, 0))
 
+        # Ẩn cho tới khi biết chắc có bản mới, để không chiếm chỗ vô ích.
+        self.update_label = ttk.Label(
+            frm, text="", foreground="#1a6dd4", cursor="hand2"
+        )
+        self.update_label.grid(row=11, column=0, columnspan=3, sticky="w")
+        self.update_label.grid_remove()
+        self.update_label.bind("<Button-1>", lambda _e: webbrowser.open(RELEASES_PAGE))
+
         for i in range(3):
             frm.columnconfigure(i, weight=1)
 
@@ -247,6 +297,19 @@ class AutoClicker:
         self.listbox.delete(0, tk.END)
         for i, (x, y) in enumerate(self.points, 1):
             self.listbox.insert(tk.END, f"  {i}.   X = {x}     Y = {y}")
+
+    # ---------- Kiểm tra bản mới ----------
+
+    def _start_update_check(self):
+        """Chạy nền để không làm app khựng lúc mở khi mạng chậm hoặc không có
+        mạng. Chỉ đọc số phiên bản, không tải và không tự cài gì."""
+
+        def worker():
+            tag = fetch_latest_version()
+            if tag and parse_version(tag) > parse_version(APP_VERSION):
+                self.events.put(("update", tag))
+
+        threading.Thread(target=worker, daemon=True).start()
 
     # ---------- Bộ vị trí đã lưu ----------
 
@@ -486,6 +549,11 @@ class AutoClicker:
                     if self.running.is_set():
                         self.stop()
                         self.status_var.set("Đã dừng bằng ESC")
+                elif kind == "update":
+                    self.update_label.config(
+                        text=f"Đã có bản mới {msg[1]} — bấm vào đây để tải"
+                    )
+                    self.update_label.grid()
         except queue.Empty:
             pass
         self.root.after(50, self._drain_events)

@@ -24,7 +24,7 @@ from pynput import keyboard, mouse
 
 # Phải khớp với tag git khi phát hành. Workflow build có bước kiểm tra,
 # tag v1.2.0 mà quên sửa dòng này là build đỏ ngay.
-APP_VERSION = "1.3.1"
+APP_VERSION = "1.3.2"
 
 RELEASES_API = "https://api.github.com/repos/HThanh209/autoclick/releases/latest"
 RELEASES_PAGE = "https://github.com/HThanh209/autoclick/releases/latest"
@@ -668,6 +668,20 @@ class AutoClicker:
         else:
             self.status_var.set(f"Dòng {idx + 1} chờ {_fmt_secs(new_delay)}")
 
+    def _restore_window(self):
+        """Đưa cửa sổ trở lại trước mặt sau khi chọn xong vị trí.
+
+        Windows có khóa tiêu điểm: cửa sổ đang ở nền không được tự nhảy lên trên,
+        nên deiconify + lift thôi là chưa đủ (nó khôi phục nhưng nằm dưới, hoặc
+        chỉ nhấp nháy taskbar). Bật -topmost chớp nhoáng rồi tắt để ép nổi lên,
+        không để dính topmost vĩnh viễn che mất cửa sổ khác.
+        """
+        self.root.deiconify()
+        self.root.lift()
+        self.root.attributes("-topmost", True)
+        self.root.focus_force()
+        self.root.after(400, lambda: self.root.attributes("-topmost", False))
+
     def _start_pick_listener(self):
         self.pick_listener = mouse.Listener(on_click=self._on_pick_click)
         self.pick_listener.start()
@@ -807,8 +821,7 @@ class AutoClicker:
                     self.pick_btn.config(state="normal")
                     self.on_list_select()
                     self.status_var.set(note)
-                    self.root.deiconify()
-                    self.root.lift()
+                    self._restore_window()
                 elif kind == "count":
                     self.status_var.set(f"Đang chạy — {msg[1]} click (điểm #{msg[2]})")
                 elif kind == "toggle":

@@ -151,8 +151,14 @@ Có sẵn `Dockerfile` nếu host dùng Docker. Không cần cài thư viện ng
 
 1. **Màn hình xanh "Windows protected your PC"** (Microsoft Defender SmartScreen)
    — không phải virus, chỉ là file chưa có điểm uy tín vì chưa ký số và còn ít
-   lượt tải. Bấm **More info** → hiện nút **Run anyway** → bấm. Chỉ một lần duy
-   nhất. Nút Run anyway bị giấu cho tới khi bấm More info.
+   lượt tải. Bấm **More info** → hiện nút **Run anyway** → bấm. Nút Run anyway bị
+   giấu cho tới khi bấm More info.
+
+   **Nếu vẫn bị hỏi lại mỗi lần mở**, gỡ Mark of the Web khỏi file: chuột phải
+   `AutoClicker.exe` → Properties → tích **Unblock** → OK. Hoặc PowerShell:
+   `Unblock-File "C:\...\AutoClicker.exe"`. Lưu ý để file trong thư mục đồng bộ
+   OneDrive (Desktop/Documents) cũng khiến dấu này bị đóng lại liên tục — chép ra
+   thư mục thường như `C:\AutoClicker` thì hết.
 
 2. **Click không ăn** vào một số game / phần mềm kế toán chạy quyền Admin → chạy
    AutoClicker bằng *Run as administrator*.

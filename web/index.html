@@ -470,7 +470,28 @@
       <li>Hiện thêm nút <span class="btn-name">Run anyway</span> <em>(Vẫn chạy)</em>
       ở góc dưới bên phải → bấm vào</li>
     </ol>
-    <p>Chỉ cần làm một lần, lần sau mở không hỏi lại.</p>
+
+    <h3>Vẫn bị hỏi lại mỗi lần mở?</h3>
+    <p>Cách trên đôi khi không được nhớ. Muốn dứt điểm thì <strong>gỡ khóa</strong>
+    của file — Windows đánh dấu mọi file tải từ mạng là "khóa", gỡ đi là SmartScreen
+    thôi hỏi:</p>
+    <ol class="steps">
+      <li>Giải nén file <code>.zip</code> ra một thư mục cố định (đừng chạy thẳng
+      trong cửa sổ .zip — mỗi lần như vậy là một file mới, sẽ bị hỏi lại).</li>
+      <li>Chuột phải <strong>AutoClicker.exe</strong> → <strong>Properties</strong> →
+      tab General, xuống dưới cùng tích ô <span class="btn-name">Unblock</span>
+      <em>(Bỏ khóa)</em> → <strong>OK</strong>.</li>
+    </ol>
+    <p>Hoặc mở <strong>PowerShell</strong> dán lệnh sau (sửa lại đường dẫn cho đúng):</p>
+    <p><code>Unblock-File "C:\AutoClicker\AutoClicker.exe"</code></p>
+
+    <div class="note warn">
+      <span class="title">Để file trong OneDrive cũng gây hỏi lại</span>
+      <p>Nếu bạn để file ở <strong>Desktop</strong> hoặc <strong>Documents</strong>
+      và hai chỗ này đang đồng bộ OneDrive, OneDrive hay đóng dấu "tải từ mạng" lại
+      lên file → lại bị hỏi. Chép file ra một thư mục thường như
+      <code>C:\AutoClicker</code> rồi chạy từ đó.</p>
+    </div>
 
     <div class="note warn">
       <span class="title">Không thấy nút Run anyway?</span>

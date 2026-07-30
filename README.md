@@ -23,12 +23,15 @@ Chạy trên Windows và macOS.
 chọn lại từ đầu:
 
 Thêm điểm bằng nút **+ Chọn vị trí** (luôn thêm vào cuối). Muốn đổi tọa độ một
-điểm đã có: bấm chọn dòng đó rồi bấm **Thay vị trí dòng đang chọn**.
+điểm đã có: bấm chọn dòng đó rồi bấm **Thay vị trí**.
 
 1. Chọn xong các vị trí và giãn cách
 2. Bấm **Lưu bộ này** → gõ tên (ví dụ *Trang chủ*)
-3. Bộ khác: **Xóa hết** → chọn vị trí mới → lưu tên khác (*Menu sản phẩm*)
+3. Bộ khác: bấm **+ Mới** để dọn sạch → chọn vị trí mới → lưu tên khác
 4. Về sau chọn tên ở ô **Bộ vị trí đã lưu** trên cùng là xong
+
+Nút **+ Mới** bắt đầu một bộ trống mà không phải xóa từng vị trí; các bộ đã lưu
+vẫn còn, và lần Lưu tiếp theo tạo bộ mới thay vì ghi đè bộ đang mở.
 
 Mỗi bộ nhớ luôn giãn cách riêng. Sửa vị trí trong một bộ thì phải bấm **Lưu bộ
 này** lần nữa với đúng tên cũ mới ghi lại được. Đang chạy thì không đổi bộ được.
@@ -36,9 +39,10 @@ này** lần nữa với đúng tên cũ mới ghi lại được. Đang chạy 
 ## Thời gian chờ riêng cho từng điểm
 
 Giãn cách chung áp cho mọi điểm, nhưng có điểm cần chờ lâu hơn (trang load chậm).
-**Bấm đúp vào một dòng** trong danh sách để đặt riêng cho điểm đó — ví dụ điểm
-tải nhanh để 1s, điểm tải chậm để 4-5s. Cột "chờ" hiện `chung` (dùng giãn cách
-chung) hoặc con số riêng như `4s`. Để trống trong hộp thoại là trả về dùng chung.
+**Chọn một dòng rồi bấm nút "Đặt thời gian chờ"** (hoặc bấm đúp vào dòng) để đặt
+riêng cho điểm đó — ví dụ điểm tải nhanh để 1s, điểm tải chậm để 4-5s. Cột "chờ"
+hiện `chung` (dùng giãn cách chung) hoặc con số riêng như `4s`. Để trống trong hộp
+thoại là trả về dùng chung.
 
 Thời gian chờ riêng được lưu cùng bộ vị trí, và giữ nguyên khi bạn thay tọa độ
 của điểm đó.

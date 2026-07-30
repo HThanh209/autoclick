@@ -24,7 +24,7 @@ from pynput import keyboard, mouse
 
 # Phải khớp với tag git khi phát hành. Workflow build có bước kiểm tra,
 # tag v1.2.0 mà quên sửa dòng này là build đỏ ngay.
-APP_VERSION = "1.3.0"
+APP_VERSION = "1.3.1"
 
 RELEASES_API = "https://api.github.com/repos/HThanh209/autoclick/releases/latest"
 RELEASES_PAGE = "https://github.com/HThanh209/autoclick/releases/latest"
@@ -443,6 +443,8 @@ class AutoClicker:
             foreground="#8a8a8a",
         ).grid(row=5, column=0, columnspan=3, sticky="w", pady=(0, 8))
 
+        # Nút này LUÔN thêm điểm mới, không đổi chữ. Việc thay vị trí tách sang
+        # nút riêng bên dưới, để thêm điểm đầu tiên không nuốt mất nút thêm.
         self.pick_btn = ttk.Button(frm, text="+ Chọn vị trí", command=self.pick_position)
         self.pick_btn.grid(row=6, column=0, sticky="ew", padx=(0, 4))
         ttk.Button(frm, text="Xóa dòng chọn", command=self.remove_point).grid(
@@ -452,35 +454,42 @@ class AutoClicker:
             row=6, column=2, sticky="ew", padx=(4, 0)
         )
 
+        # Chỉ bật khi có dòng đang chọn. Bấm rồi click lại để đổi tọa độ dòng đó.
+        self.replace_btn = ttk.Button(
+            frm, text="Thay vị trí dòng đang chọn", command=self.replace_position,
+            state="disabled",
+        )
+        self.replace_btn.grid(row=7, column=0, columnspan=3, sticky="ew", pady=(4, 0))
+
         ttk.Separator(frm, orient="horizontal").grid(
-            row=7, column=0, columnspan=3, sticky="ew", pady=10
+            row=8, column=0, columnspan=3, sticky="ew", pady=10
         )
 
-        ttk.Label(frm, text="Giãn cách chung mỗi click (ms)").grid(row=8, column=0, columnspan=2, sticky="w")
+        ttk.Label(frm, text="Giãn cách chung mỗi click (ms)").grid(row=9, column=0, columnspan=2, sticky="w")
         self.interval_var = tk.StringVar(value="1000")
         ttk.Entry(frm, textvariable=self.interval_var, width=8, justify="center").grid(
-            row=8, column=2, sticky="e"
+            row=9, column=2, sticky="e"
         )
 
         self.toggle_btn = ttk.Button(frm, text="BẮT ĐẦU  (F8)", command=self.toggle)
-        self.toggle_btn.grid(row=9, column=0, columnspan=3, sticky="ew", pady=(12, 4))
+        self.toggle_btn.grid(row=10, column=0, columnspan=3, sticky="ew", pady=(12, 4))
 
         self.status_var = tk.StringVar(value="Đã dừng")
         ttk.Label(frm, textvariable=self.status_var, foreground="#555").grid(
-            row=10, column=0, columnspan=3, sticky="w"
+            row=11, column=0, columnspan=3, sticky="w"
         )
 
         ttk.Label(
             frm,
             text="F8 = bật/tắt   •   ESC = dừng khẩn cấp",
             foreground="#888",
-        ).grid(row=11, column=0, columnspan=3, sticky="w", pady=(8, 0))
+        ).grid(row=12, column=0, columnspan=3, sticky="w", pady=(8, 0))
 
         # Ẩn cho tới khi biết chắc có bản mới, để không chiếm chỗ vô ích.
         self.update_label = ttk.Label(
             frm, text="", foreground="#1a6dd4", cursor="hand2"
         )
-        self.update_label.grid(row=12, column=0, columnspan=3, sticky="w")
+        self.update_label.grid(row=13, column=0, columnspan=3, sticky="w")
         self.update_label.grid_remove()
         self.update_label.bind("<Button-1>", lambda _e: webbrowser.open(RELEASES_PAGE))
 
@@ -598,31 +607,38 @@ class AutoClicker:
     # ---------- Chọn vị trí ----------
 
     def pick_position(self):
+        """Luôn thêm một điểm mới vào cuối danh sách."""
+        self._begin_pick(None)
+
+    def replace_position(self):
+        """Đổi tọa độ của đúng dòng đang chọn, không thêm dòng mới."""
+        sel = self.listbox.curselection()
+        if not sel:
+            return
+        self._begin_pick(sel[0])
+
+    def _begin_pick(self, replace_index):
         if self.picking or self.running.is_set():
             return
-        # Đang chọn dòng nào thì thay vị trí của dòng đó, không thêm dòng mới.
-        sel = self.listbox.curselection()
-        self.replace_index = sel[0] if sel else None
-
+        self.replace_index = replace_index
         self.picking = True
         self.pick_btn.config(state="disabled")
-        if self.replace_index is None:
-            self.status_var.set("Click chuột trái vào vị trí cần chọn...")
+        self.replace_btn.config(state="disabled")
+        if replace_index is None:
+            self.status_var.set("Click chuột trái vào vị trí cần thêm...")
         else:
             self.status_var.set(
-                f"Click để thay vị trí cho dòng {self.replace_index + 1}..."
+                f"Click để thay vị trí cho dòng {replace_index + 1}..."
             )
         self.root.iconify()
         self.root.after(PICK_DELAY_MS, self._start_pick_listener)
 
     def on_list_select(self, _event=None):
-        """Đổi chữ trên nút để nói rõ sắp thêm mới hay sắp thay thế."""
+        """Bật nút thay vị trí khi có dòng đang chọn."""
         if self.picking or self.running.is_set():
             return
-        sel = self.listbox.curselection()
-        self.pick_btn.config(
-            text=f"Thay vị trí dòng {sel[0] + 1}" if sel else "+ Chọn vị trí"
-        )
+        has = bool(self.listbox.curselection())
+        self.replace_btn.config(state="normal" if has else "disabled")
 
     def edit_delay(self, event=None):
         """Bấm đúp vào một dòng để đặt thời gian chờ riêng cho điểm đó."""
@@ -709,6 +725,7 @@ class AutoClicker:
         )
         self.worker.start()
         self.toggle_btn.config(text="DỪNG  (F8)")
+        self.replace_btn.config(state="disabled")
         self.status_var.set("Đang chạy...")
 
     def stop(self):
@@ -716,6 +733,7 @@ class AutoClicker:
             return
         self.running.clear()
         self.toggle_btn.config(text="BẮT ĐẦU  (F8)")
+        self.on_list_select()  # bật lại nút thay vị trí nếu đang chọn dòng
 
     def _click_loop(self, points, interval):
         idx = 0

@@ -22,6 +22,9 @@ Chạy trên Windows và macOS.
 Đặt tên rồi lưu, lần sau chọn tên là nạp lại toàn bộ vị trí + giãn cách, khỏi
 chọn lại từ đầu:
 
+Thêm điểm bằng nút **+ Chọn vị trí** (luôn thêm vào cuối). Muốn đổi tọa độ một
+điểm đã có: bấm chọn dòng đó rồi bấm **Thay vị trí dòng đang chọn**.
+
 1. Chọn xong các vị trí và giãn cách
 2. Bấm **Lưu bộ này** → gõ tên (ví dụ *Trang chủ*)
 3. Bộ khác: **Xóa hết** → chọn vị trí mới → lưu tên khác (*Menu sản phẩm*)

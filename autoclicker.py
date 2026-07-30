@@ -18,13 +18,13 @@ import urllib.request
 import webbrowser
 from pathlib import Path
 from tkinter import font as tkfont
-from tkinter import messagebox, simpledialog, ttk
+from tkinter import messagebox, ttk
 
 from pynput import keyboard, mouse
 
 # Phải khớp với tag git khi phát hành. Workflow build có bước kiểm tra,
 # tag v1.2.0 mà quên sửa dòng này là build đỏ ngay.
-APP_VERSION = "1.2.0"
+APP_VERSION = "1.3.0"
 
 RELEASES_API = "https://api.github.com/repos/HThanh209/autoclick/releases/latest"
 RELEASES_PAGE = "https://github.com/HThanh209/autoclick/releases/latest"
@@ -87,6 +87,28 @@ def fetch_latest_version(timeout=6):
     return str(tag) if tag else None
 
 
+def _fmt_secs(ms):
+    """1000 -> '1s', 4500 -> '4.5s'. Người dùng nghĩ bằng giây, không phải ms."""
+    s = ms / 1000.0
+    return f"{s:g}s"
+
+
+def _parse_point(item):
+    """Một điểm trong file là [x, y] hoặc [x, y, delay_ms].
+
+    delay_ms = None nghĩa là điểm dùng giãn cách chung. Giữ dạng [x, y] cho
+    file cũ (chưa có tính năng chờ riêng) để không phải nâng cấp thủ công.
+    """
+    x = int(item[0])
+    y = int(item[1])
+    delay = None
+    if len(item) >= 3 and item[2] is not None:
+        delay = float(item[2])
+        if delay < 0:
+            delay = None
+    return (x, y, delay)
+
+
 def load_profiles():
     """Đọc các bộ vị trí đã lưu. File hỏng thì trả về rỗng chứ không làm
     sập app — mất cấu hình còn hơn không mở lên được."""
@@ -99,7 +121,7 @@ def load_profiles():
     profiles = {}
     for name, entry in (data.get("profiles") or {}).items():
         try:
-            points = [(int(x), int(y)) for x, y in entry["points"]]
+            points = [_parse_point(item) for item in entry["points"]]
         except (KeyError, TypeError, ValueError):
             continue
         if not points:
@@ -120,7 +142,9 @@ def save_profiles(profiles):
         "version": 1,
         "profiles": {
             name: {
-                "points": [[x, y] for x, y in p["points"]],
+                "points": [
+                    ([x, y] if d is None else [x, y, d]) for (x, y, d) in p["points"]
+                ],
                 "interval_ms": p["interval_ms"],
             }
             for name, p in profiles.items()
@@ -180,6 +204,167 @@ def apply_scaling_and_fonts(root):
     return (mono_family, base_size)
 
 
+class NameDialog(tk.Toplevel):
+    """Hộp thoại đặt tên bộ: chọn tên có sẵn trong danh sách để ghi đè,
+    hoặc gõ tên mới. Ô nhập cho gõ tự do nên làm được cả hai việc."""
+
+    def __init__(self, parent, names, initial=""):
+        super().__init__(parent)
+        self.result = None
+        self.names = list(names)
+
+        self.title("Lưu bộ vị trí")
+        self.resizable(False, False)
+        self.transient(parent)
+
+        frm = ttk.Frame(self, padding=14)
+        frm.grid(sticky="nsew")
+
+        ttk.Label(frm, text="Chọn bộ có sẵn để ghi đè, hoặc gõ tên mới:").grid(
+            row=0, column=0, columnspan=2, sticky="w"
+        )
+
+        self.var = tk.StringVar(value=initial)
+        self.combo = ttk.Combobox(frm, textvariable=self.var, values=self.names, width=32)
+        self.combo.grid(row=1, column=0, columnspan=2, sticky="ew", pady=(8, 2))
+
+        # Nói trước sẽ ghi đè hay tạo mới, để khỏi phải hỏi lại lần nữa.
+        self.hint_var = tk.StringVar()
+        self.hint = ttk.Label(frm, textvariable=self.hint_var, foreground="#8a8a8a")
+        self.hint.grid(row=2, column=0, columnspan=2, sticky="w", pady=(0, 12))
+        self.var.trace_add("write", lambda *_: self._update_hint())
+        self._update_hint()
+
+        ttk.Button(frm, text="Lưu", command=self._ok).grid(
+            row=3, column=0, sticky="ew", padx=(0, 4)
+        )
+        ttk.Button(frm, text="Hủy", command=self._cancel).grid(
+            row=3, column=1, sticky="ew", padx=(4, 0)
+        )
+        frm.columnconfigure(0, weight=1)
+        frm.columnconfigure(1, weight=1)
+
+        self.bind("<Return>", lambda _e: self._ok())
+        self.bind("<Escape>", lambda _e: self._cancel())
+        self.protocol("WM_DELETE_WINDOW", self._cancel)
+
+        self.combo.focus_set()
+        self._center_on(parent)
+        self.grab_set()
+        self.wait_window(self)
+
+    def _update_hint(self):
+        name = self.var.get().strip()
+        if not name:
+            self.hint_var.set(" ")
+        elif name in self.names:
+            self.hint_var.set(f"Sẽ ghi đè bộ \"{name}\" đang có")
+        else:
+            self.hint_var.set("Sẽ tạo bộ mới")
+
+    def _center_on(self, parent):
+        self.update_idletasks()
+        x = parent.winfo_rootx() + (parent.winfo_width() - self.winfo_width()) // 2
+        y = parent.winfo_rooty() + (parent.winfo_height() - self.winfo_height()) // 3
+        self.geometry(f"+{max(x, 0)}+{max(y, 0)}")
+
+    def _ok(self):
+        name = self.var.get().strip()
+        if not name:
+            self.hint_var.set("Chưa nhập tên")
+            return
+        self.result = name
+        self.destroy()
+
+    def _cancel(self):
+        self.result = None
+        self.destroy()
+
+
+class DelayDialog(tk.Toplevel):
+    """Đặt thời gian chờ riêng cho một điểm, tính bằng giây.
+
+    result là một trong ba: giá trị ms (float) nếu đặt số cụ thể,
+    chuỗi "clear" nếu chọn dùng giãn cách chung, hoặc None nếu bấm Hủy.
+    """
+
+    def __init__(self, parent, row_no, current_ms):
+        super().__init__(parent)
+        self.result = None
+
+        self.title("Thời gian chờ")
+        self.resizable(False, False)
+        self.transient(parent)
+
+        frm = ttk.Frame(self, padding=14)
+        frm.grid(sticky="nsew")
+
+        ttk.Label(
+            frm,
+            text=f"Chờ bao lâu sau khi click điểm số {row_no},\ntrước khi sang điểm tiếp theo?",
+            justify="left",
+        ).grid(row=0, column=0, columnspan=2, sticky="w")
+
+        self.var = tk.StringVar(
+            value="" if current_ms is None else f"{current_ms / 1000:g}"
+        )
+        entry = ttk.Entry(frm, textvariable=self.var, width=12, justify="center")
+        entry.grid(row=1, column=0, sticky="w", pady=(10, 2))
+        ttk.Label(frm, text="giây").grid(row=1, column=1, sticky="w", padx=(6, 0))
+
+        ttk.Label(
+            frm,
+            text="Để trống = dùng giãn cách chung của cả bộ.",
+            foreground="#8a8a8a",
+        ).grid(row=2, column=0, columnspan=2, sticky="w", pady=(0, 12))
+
+        ttk.Button(frm, text="Lưu", command=self._ok).grid(
+            row=3, column=0, sticky="ew", padx=(0, 4)
+        )
+        ttk.Button(frm, text="Dùng chung", command=self._clear).grid(
+            row=3, column=1, sticky="ew", padx=(4, 0)
+        )
+
+        self.bind("<Return>", lambda _e: self._ok())
+        self.bind("<Escape>", lambda _e: self.destroy())
+
+        entry.focus_set()
+        entry.select_range(0, tk.END)
+        self._center_on(parent)
+        self.grab_set()
+        self.wait_window(self)
+
+    def _center_on(self, parent):
+        self.update_idletasks()
+        x = parent.winfo_rootx() + (parent.winfo_width() - self.winfo_width()) // 2
+        y = parent.winfo_rooty() + (parent.winfo_height() - self.winfo_height()) // 3
+        self.geometry(f"+{max(x, 0)}+{max(y, 0)}")
+
+    def _ok(self):
+        text = self.var.get().strip().replace(",", ".")
+        if not text:
+            self.result = "clear"
+            self.destroy()
+            return
+        try:
+            secs = float(text)
+        except ValueError:
+            messagebox.showwarning("Sai giá trị", "Nhập một con số, ví dụ 4 hoặc 4.5.", parent=self)
+            return
+        ms = secs * 1000.0
+        if ms < MIN_INTERVAL_MS:
+            messagebox.showwarning(
+                "Quá nhanh", f"Thời gian chờ tối thiểu là {MIN_INTERVAL_MS} ms.", parent=self
+            )
+            return
+        self.result = ms
+        self.destroy()
+
+    def _clear(self):
+        self.result = "clear"
+        self.destroy()
+
+
 class AutoClicker:
     def __init__(self, root):
         self.root = root
@@ -188,6 +373,7 @@ class AutoClicker:
         self.worker = None
         self.picking = False
         self.pick_listener = None
+        self.replace_index = None  # dòng sắp bị thay vị trí, None = thêm mới
         self.events = queue.Queue()
         self.mouse_ctl = mouse.Controller()
         self.mono_font = apply_scaling_and_fonts(root)
@@ -240,53 +426,61 @@ class AutoClicker:
         self.listbox = tk.Listbox(
             frm,
             height=8,
-            width=30,
+            width=38,
             activestyle="none",
             font=self.mono_font,
             borderwidth=1,
             relief="solid",
             highlightthickness=0,
         )
-        self.listbox.grid(row=4, column=0, columnspan=3, sticky="ew", pady=(4, 8))
+        self.listbox.grid(row=4, column=0, columnspan=3, sticky="ew", pady=(4, 2))
+        self.listbox.bind("<<ListboxSelect>>", self.on_list_select)
+        self.listbox.bind("<Double-Button-1>", self.edit_delay)
+
+        ttk.Label(
+            frm,
+            text="Bấm đúp vào một dòng để đặt thời gian chờ riêng cho điểm đó.",
+            foreground="#8a8a8a",
+        ).grid(row=5, column=0, columnspan=3, sticky="w", pady=(0, 8))
 
         self.pick_btn = ttk.Button(frm, text="+ Chọn vị trí", command=self.pick_position)
-        self.pick_btn.grid(row=5, column=0, sticky="ew", padx=(0, 4))
+        self.pick_btn.grid(row=6, column=0, sticky="ew", padx=(0, 4))
         ttk.Button(frm, text="Xóa dòng chọn", command=self.remove_point).grid(
-            row=5, column=1, sticky="ew", padx=4
+            row=6, column=1, sticky="ew", padx=4
         )
         ttk.Button(frm, text="Xóa hết", command=self.clear_points).grid(
-            row=5, column=2, sticky="ew", padx=(4, 0)
+            row=6, column=2, sticky="ew", padx=(4, 0)
         )
 
         ttk.Separator(frm, orient="horizontal").grid(
-            row=6, column=0, columnspan=3, sticky="ew", pady=10
+            row=7, column=0, columnspan=3, sticky="ew", pady=10
         )
 
-        ttk.Label(frm, text="Giãn cách mỗi click (ms)").grid(row=7, column=0, sticky="w")
+        ttk.Label(frm, text="Giãn cách chung mỗi click (ms)").grid(row=8, column=0, columnspan=2, sticky="w")
         self.interval_var = tk.StringVar(value="1000")
         ttk.Entry(frm, textvariable=self.interval_var, width=8, justify="center").grid(
-            row=7, column=1, sticky="w", padx=(10, 0)
+            row=8, column=2, sticky="e"
         )
 
         self.toggle_btn = ttk.Button(frm, text="BẮT ĐẦU  (F8)", command=self.toggle)
-        self.toggle_btn.grid(row=8, column=0, columnspan=3, sticky="ew", pady=(12, 4))
+        self.toggle_btn.grid(row=9, column=0, columnspan=3, sticky="ew", pady=(12, 4))
 
         self.status_var = tk.StringVar(value="Đã dừng")
         ttk.Label(frm, textvariable=self.status_var, foreground="#555").grid(
-            row=9, column=0, columnspan=3, sticky="w"
+            row=10, column=0, columnspan=3, sticky="w"
         )
 
         ttk.Label(
             frm,
             text="F8 = bật/tắt   •   ESC = dừng khẩn cấp",
             foreground="#888",
-        ).grid(row=10, column=0, columnspan=3, sticky="w", pady=(8, 0))
+        ).grid(row=11, column=0, columnspan=3, sticky="w", pady=(8, 0))
 
         # Ẩn cho tới khi biết chắc có bản mới, để không chiếm chỗ vô ích.
         self.update_label = ttk.Label(
             frm, text="", foreground="#1a6dd4", cursor="hand2"
         )
-        self.update_label.grid(row=11, column=0, columnspan=3, sticky="w")
+        self.update_label.grid(row=12, column=0, columnspan=3, sticky="w")
         self.update_label.grid_remove()
         self.update_label.bind("<Button-1>", lambda _e: webbrowser.open(RELEASES_PAGE))
 
@@ -295,8 +489,11 @@ class AutoClicker:
 
     def _refresh_list(self):
         self.listbox.delete(0, tk.END)
-        for i, (x, y) in enumerate(self.points, 1):
-            self.listbox.insert(tk.END, f"  {i}.   X = {x}     Y = {y}")
+        for i, (x, y, d) in enumerate(self.points, 1):
+            wait = "chung" if d is None else _fmt_secs(d)
+            self.listbox.insert(
+                tk.END, f" {i:>2}.  X ={x:>6}   Y ={y:>6}   chờ {wait:>6}"
+            )
 
     # ---------- Kiểm tra bản mới ----------
 
@@ -338,6 +535,7 @@ class AutoClicker:
         self.current_profile = name
         self._refresh_list()
         self.listbox.selection_clear(0, tk.END)
+        self.on_list_select()
         self.status_var.set(f"Đã nạp \"{name}\" — {len(self.points)} vị trí")
 
     def save_current_profile(self):
@@ -354,21 +552,9 @@ class AutoClicker:
             messagebox.showwarning("Sai giá trị", "Giãn cách phải là một con số.")
             return
 
-        name = simpledialog.askstring(
-            "Lưu bộ vị trí",
-            "Đặt tên cho bộ này:\n(ví dụ: Trang chủ, Menu sản phẩm)",
-            initialvalue=self.current_profile or "",
-            parent=self.root,
-        )
-        if name is None:
-            return
-        name = name.strip()
+        # Hộp thoại đã báo trước "ghi đè" hay "tạo mới" nên không hỏi lại nữa.
+        name = NameDialog(self.root, list(self.profiles), self.current_profile or "").result
         if not name:
-            messagebox.showwarning("Thiếu tên", "Tên không được để trống.")
-            return
-        if name in self.profiles and not messagebox.askyesno(
-            "Ghi đè?", f"Đã có bộ tên \"{name}\". Ghi đè lên bộ cũ?"
-        ):
             return
 
         self.profiles[name] = {
@@ -414,11 +600,57 @@ class AutoClicker:
     def pick_position(self):
         if self.picking or self.running.is_set():
             return
+        # Đang chọn dòng nào thì thay vị trí của dòng đó, không thêm dòng mới.
+        sel = self.listbox.curselection()
+        self.replace_index = sel[0] if sel else None
+
         self.picking = True
         self.pick_btn.config(state="disabled")
-        self.status_var.set("Click chuột trái vào vị trí cần chọn...")
+        if self.replace_index is None:
+            self.status_var.set("Click chuột trái vào vị trí cần chọn...")
+        else:
+            self.status_var.set(
+                f"Click để thay vị trí cho dòng {self.replace_index + 1}..."
+            )
         self.root.iconify()
         self.root.after(PICK_DELAY_MS, self._start_pick_listener)
+
+    def on_list_select(self, _event=None):
+        """Đổi chữ trên nút để nói rõ sắp thêm mới hay sắp thay thế."""
+        if self.picking or self.running.is_set():
+            return
+        sel = self.listbox.curselection()
+        self.pick_btn.config(
+            text=f"Thay vị trí dòng {sel[0] + 1}" if sel else "+ Chọn vị trí"
+        )
+
+    def edit_delay(self, event=None):
+        """Bấm đúp vào một dòng để đặt thời gian chờ riêng cho điểm đó."""
+        if self.picking or self.running.is_set():
+            return
+        # Bấm đúp thì lấy dòng ngay dưới con trỏ cho chắc, không dựa vào ô đang chọn.
+        if event is not None:
+            idx = self.listbox.nearest(event.y)
+        else:
+            sel = self.listbox.curselection()
+            idx = sel[0] if sel else None
+        if idx is None or not (0 <= idx < len(self.points)):
+            return
+
+        x, y, delay = self.points[idx]
+        result = DelayDialog(self.root, idx + 1, delay).result
+        if result is None:  # bấm Hủy / đóng
+            return
+        new_delay = None if result == "clear" else float(result)
+        self.points[idx] = (x, y, new_delay)
+        self._refresh_list()
+        self.listbox.selection_set(idx)
+        self.listbox.see(idx)
+        self.on_list_select()
+        if new_delay is None:
+            self.status_var.set(f"Dòng {idx + 1} dùng giãn cách chung")
+        else:
+            self.status_var.set(f"Dòng {idx + 1} chờ {_fmt_secs(new_delay)}")
 
     def _start_pick_listener(self):
         self.pick_listener = mouse.Listener(on_click=self._on_pick_click)
@@ -435,12 +667,14 @@ class AutoClicker:
             return
         del self.points[sel[0]]
         self._refresh_list()
+        self.on_list_select()
 
     def clear_points(self):
         if self.running.is_set():
             return
         self.points.clear()
         self._refresh_list()
+        self.on_list_select()
 
     # ---------- Chạy / dừng ----------
 
@@ -487,7 +721,7 @@ class AutoClicker:
         idx = 0
         count = 0
         while self.running.is_set():
-            x, y = points[idx]
+            x, y, delay = points[idx]
             self.mouse_ctl.position = (x, y)
             time.sleep(MOVE_SETTLE)
             if not self.running.is_set():
@@ -496,7 +730,9 @@ class AutoClicker:
             count += 1
             self.events.put(("count", count, idx + 1))
             idx = (idx + 1) % len(points)
-            self._interruptible_sleep(interval)
+            # Điểm có đặt thời gian chờ riêng thì dùng nó, không thì giãn cách chung.
+            wait = (delay / 1000.0) if delay is not None else interval
+            self._interruptible_sleep(wait)
 
     def _interruptible_sleep(self, seconds):
         """Ngủ theo từng lát 20ms để bấm dừng là dừng ngay."""
@@ -533,12 +769,26 @@ class AutoClicker:
                 msg = self.events.get_nowait()
                 kind = msg[0]
                 if kind == "point":
-                    self.points.append((msg[1], msg[2]))
+                    idx = self.replace_index
+                    if idx is not None and 0 <= idx < len(self.points):
+                        # Thay tọa độ nhưng giữ nguyên thời gian chờ đã đặt.
+                        old_delay = self.points[idx][2]
+                        self.points[idx] = (msg[1], msg[2], old_delay)
+                        note = f"Đã thay vị trí dòng {idx + 1}"
+                    else:
+                        self.points.append((msg[1], msg[2], None))
+                        idx = len(self.points) - 1
+                        note = f"Đã lưu vị trí #{len(self.points)}"
+                    self.replace_index = None
                     self._refresh_list()
+                    # Giữ nguyên dòng vừa đụng tới để dễ nhìn và sửa tiếp.
+                    self.listbox.selection_set(idx)
+                    self.listbox.see(idx)
                     self.picking = False
                     self.pick_listener = None
                     self.pick_btn.config(state="normal")
-                    self.status_var.set(f"Đã lưu vị trí #{len(self.points)}")
+                    self.on_list_select()
+                    self.status_var.set(note)
                     self.root.deiconify()
                     self.root.lift()
                 elif kind == "count":

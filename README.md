@@ -30,6 +30,16 @@ chọn lại từ đầu:
 Mỗi bộ nhớ luôn giãn cách riêng. Sửa vị trí trong một bộ thì phải bấm **Lưu bộ
 này** lần nữa với đúng tên cũ mới ghi lại được. Đang chạy thì không đổi bộ được.
 
+## Thời gian chờ riêng cho từng điểm
+
+Giãn cách chung áp cho mọi điểm, nhưng có điểm cần chờ lâu hơn (trang load chậm).
+**Bấm đúp vào một dòng** trong danh sách để đặt riêng cho điểm đó — ví dụ điểm
+tải nhanh để 1s, điểm tải chậm để 4-5s. Cột "chờ" hiện `chung` (dùng giãn cách
+chung) hoặc con số riêng như `4s`. Để trống trong hộp thoại là trả về dùng chung.
+
+Thời gian chờ riêng được lưu cùng bộ vị trí, và giữ nguyên khi bạn thay tọa độ
+của điểm đó.
+
 Tọa độ gắn với độ phân giải màn hình — đổi màn hình hoặc đổi mức phóng to thì bộ
 cũ sẽ click trượt, phải chọn lại.
 

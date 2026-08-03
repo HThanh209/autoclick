@@ -49,14 +49,19 @@ jobs:
       - name: Cài thư viện
         run: pip install -r requirements.txt
 
+      # Dùng onedir (không --onefile). Bản onefile tự bung ruột ra thư mục Temp
+      # mỗi lần chạy -> Windows Defender hay báo nhầm Trojan:Win32/Wacatac.B!ml.
+      # onedir chạy thẳng, không bung ra Temp, nên đỡ bị nghi hơn nhiều.
       - name: Đóng gói
         run: >
-          pyinstaller --onefile --windowed --name AutoClicker
+          pyinstaller --onedir --windowed --name AutoClicker
           --clean --noconfirm autoclicker.py
 
+      # Nén cả thư mục dist/AutoClicker (chứa AutoClicker.exe + thư mục _internal).
+      # exe phải nằm cạnh _internal mới chạy được, không tách riêng ra được.
       - name: Nén bản Windows
         if: runner.os == 'Windows'
-        run: Compress-Archive -Path dist/AutoClicker.exe -DestinationPath ${{ matrix.asset }}
+        run: Compress-Archive -Path dist/AutoClicker -DestinationPath ${{ matrix.asset }}
 
       # Trên Apple Silicon mọi file thực thi BẮT BUỘC có chữ ký, dù chỉ là
       # ad-hoc (--sign -). Thiếu thì macOS báo "app is damaged" và không cho
@@ -107,8 +112,12 @@ jobs:
 
             Giải nén rồi mở lên chạy, không cần cài Python.
 
+            **Windows**: giải nén ra sẽ có thư mục `AutoClicker`, mở
+            `AutoClicker.exe` bên trong. Giữ nguyên cả thư mục — đừng tách riêng
+            file .exe ra vì nó cần thư mục `_internal` nằm cạnh. Nếu Defender báo
+            virus (`Wacatac.B!ml`) thì đó là báo nhầm của PyInstaller — thêm ngoại
+            lệ cho thư mục trong Windows Security, hoặc xem hướng dẫn trên trang tải.
+
             **macOS**: lần đầu bị chặn vì app chưa ký số — chuột phải vào app →
             Open → Open. Sau đó vào System Settings → Privacy & Security cấp quyền
             **Accessibility** (điều khiển chuột) và **Input Monitoring** (phím tắt F8/ESC).
-
-            **Windows**: nếu Defender cảnh báo → More info → Run anyway.

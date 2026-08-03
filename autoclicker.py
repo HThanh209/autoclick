@@ -24,7 +24,7 @@ from pynput import keyboard, mouse
 
 # Phải khớp với tag git khi phát hành. Workflow build có bước kiểm tra,
 # tag v1.2.0 mà quên sửa dòng này là build đỏ ngay.
-APP_VERSION = "1.4.0"
+APP_VERSION = "1.4.1"
 
 RELEASES_API = "https://api.github.com/repos/HThanh209/autoclick/releases/latest"
 RELEASES_PAGE = "https://github.com/HThanh209/autoclick/releases/latest"

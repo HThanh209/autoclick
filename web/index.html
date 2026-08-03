@@ -481,6 +481,26 @@
       ở góc dưới bên phải → bấm vào</li>
     </ol>
 
+    <div class="note info">
+      <span class="title">Giải nén xong là một thư mục, không phải một file</span>
+      <p>Mở thư mục <strong>AutoClicker</strong> vừa giải nén, chạy
+      <strong>AutoClicker.exe</strong> bên trong. Giữ nguyên cả thư mục — đừng kéo
+      riêng file .exe ra chỗ khác, vì nó cần thư mục <code>_internal</code> nằm cạnh
+      mới chạy được. Muốn có lối tắt ngoài Desktop thì chuột phải AutoClicker.exe →
+      Send to → Desktop (create shortcut).</p>
+    </div>
+
+    <div class="note warn">
+      <span class="title">Defender báo "virus" rồi tự tắt app?</span>
+      <p>Nếu thấy nhãn <code>Trojan:Win32/Wacatac.B!ml</code> — đuôi <code>!ml</code>
+      nghĩa là máy học <em>đoán</em>, không phải virus thật. Đây là báo nhầm kinh
+      điển của phần mềm đóng gói bằng PyInstaller, cộng với việc autoclicker vốn
+      giả lập chuột nên bị nghi. Cách chạy được: mở <strong>Windows Security →
+      Virus &amp; threat protection → Manage settings → Add or remove exclusions</strong>
+      → thêm thư mục chứa AutoClicker. Nên để app trong một thư mục riêng
+      (<code>C:\AutoClicker</code>) rồi chỉ loại trừ đúng thư mục đó.</p>
+    </div>
+
     <h3>Vẫn bị hỏi lại mỗi lần mở?</h3>
     <p>Cách trên đôi khi không được nhớ. Muốn dứt điểm thì <strong>gỡ khóa</strong>
     của file — Windows đánh dấu mọi file tải từ mạng là "khóa", gỡ đi là SmartScreen

@@ -94,12 +94,18 @@ git push origin v1.0.0
 Muốn build thử mà chưa phát hành thì vào tab **Actions** → **Build** → **Run
 workflow**, file nằm ở mục Artifacts.
 
-**Thủ công trên Windows** → ra `dist/AutoClicker.exe`:
+**Thủ công trên Windows** → ra thư mục `dist/AutoClicker/` (chứa `AutoClicker.exe`
++ `_internal/`):
 
 ```bash
 pip install -r requirements.txt
-python -m PyInstaller --onefile --windowed --name AutoClicker --clean --noconfirm autoclicker.py
+python -m PyInstaller --onedir --windowed --name AutoClicker --clean --noconfirm autoclicker.py
 ```
+
+> Dùng `--onedir` chứ không `--onefile`: bản onefile tự bung ra thư mục Temp mỗi
+> lần chạy, khiến Windows Defender hay báo nhầm `Trojan:Win32/Wacatac.B!ml`.
+> onedir chạy thẳng nên đỡ bị nghi hơn nhiều. Đổi lại phải giữ nguyên cả thư mục
+> `AutoClicker` — `AutoClicker.exe` cần `_internal/` nằm cạnh mới chạy được.
 
 **Thủ công trên macOS** → ra `dist/AutoClicker.app`:
 
